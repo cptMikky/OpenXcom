@@ -144,6 +144,7 @@ int Mod::FIRE_DAMAGE_RANGE[2];
 std::string Mod::DEBRIEF_MUSIC_GOOD;
 std::string Mod::DEBRIEF_MUSIC_BAD;
 int Mod::DIFFICULTY_COEFFICIENT[5];
+int Mod::SELL_PRICE_COEFFICIENT[5];
 int Mod::UNIT_RESPONSE_SOUNDS_FREQUENCY[4];
 bool Mod::EXTENDED_ITEM_RELOAD_COST;
 bool Mod::EXTENDED_RUNNING_COST;
@@ -218,6 +219,12 @@ void Mod::resetGlobalStatics()
 	DIFFICULTY_COEFFICIENT[2] = 2;
 	DIFFICULTY_COEFFICIENT[3] = 3;
 	DIFFICULTY_COEFFICIENT[4] = 4;
+
+	SELL_PRICE_COEFFICIENT[0] = 100;
+	SELL_PRICE_COEFFICIENT[1] = 100;
+	SELL_PRICE_COEFFICIENT[2] = 100;
+	SELL_PRICE_COEFFICIENT[3] = 100;
+	SELL_PRICE_COEFFICIENT[4] = 100;
 
 	UNIT_RESPONSE_SOUNDS_FREQUENCY[0] = 100; // select unit
 	UNIT_RESPONSE_SOUNDS_FREQUENCY[1] = 100; // start moving
@@ -1851,6 +1858,7 @@ void Mod::loadAll()
 	// fixed user options
 	if (!_fixedUserOptions.empty())
 	{
+		_fixedUserOptions.erase("oxceLinks");
 		_fixedUserOptions.erase("oxceUpdateCheck");
 		_fixedUserOptions.erase("maximizeInfoScreens"); // FIXME: make proper categorisations in the next release
 		_fixedUserOptions.erase("oxceAutoNightVisionThreshold");
@@ -2368,6 +2376,8 @@ void Mod::loadFile(const FileMap::FileRecord &filerec, ModScript &parsers)
 	_psiUnlockResearch = doc["psiUnlockResearch"].as<std::string>(_psiUnlockResearch);
 	_fakeUnderwaterBaseUnlockResearch = doc["fakeUnderwaterBaseUnlockResearch"].as<std::string>(_fakeUnderwaterBaseUnlockResearch);
 	_newBaseUnlockResearch = doc["newBaseUnlockResearch"].as<std::string>(_newBaseUnlockResearch);
+	_hireScientistsUnlockResearch = doc["hireScientistsUnlockResearch"].as<std::string>(_hireScientistsUnlockResearch);
+	_hireEngineersUnlockResearch = doc["hireEngineersUnlockResearch"].as<std::string>(_hireEngineersUnlockResearch);
 	_destroyedFacility = doc["destroyedFacility"].as<std::string>(_destroyedFacility);
 
 	_aiUseDelayGrenade = doc["turnAIUseGrenade"].as<int>(_aiUseDelayGrenade);
@@ -2526,6 +2536,15 @@ void Mod::loadFile(const FileMap::FileRecord &filerec, ModScript &parsers)
 		{
 			DIFFICULTY_COEFFICIENT[num] = (*i).as<int>(DIFFICULTY_COEFFICIENT[num]);
 			_statAdjustment[num].growthMultiplier = DIFFICULTY_COEFFICIENT[num];
+			++num;
+		}
+	}
+	if (doc["sellPriceCoefficient"])
+	{
+		size_t num = 0;
+		for (YAML::const_iterator i = doc["sellPriceCoefficient"].begin(); i != doc["sellPriceCoefficient"].end() && num < MaxDifficultyLevels; ++i)
+		{
+			SELL_PRICE_COEFFICIENT[num] = (*i).as<int>(SELL_PRICE_COEFFICIENT[num]);
 			++num;
 		}
 	}
