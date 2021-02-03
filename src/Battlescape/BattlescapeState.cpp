@@ -39,6 +39,7 @@
 #include "MiniMapState.h"
 #include "BattlescapeGenerator.h"
 #include "BriefingState.h"
+#include "ExtendedBattlescapeLinksState.h"
 #include "../lodepng.h"
 #include "../fmath.h"
 #include "../Geoscape/SelectMusicTrackState.h"
@@ -191,8 +192,6 @@ BattlescapeState::BattlescapeState() :
 		_numVisibleUnit[i] = new NumberText(15, 12, _btnVisibleUnit[i]->getX() + 6 , _btnVisibleUnit[i]->getY() + 4);
 	}
 	_numVisibleUnit[9]->setX(_numVisibleUnit[9]->getX() - 2); // center number 10
-	_btnToggleNV = new InteractiveSurface(12, 12, x + 2, y - 23);
-	_btnTogglePL = new InteractiveSurface(12, 12, x + 2, y - 23 - 13);
 	_warning = new WarningMessage(224, 24, x + 48, y + 32);
 	_btnLaunch = new BattlescapeButton(32, 24, screenWidth - 32, 0); // we need screenWidth, because that is independent of the black bars on the screen
 	_btnLaunch->setVisible(false);
@@ -286,6 +285,15 @@ BattlescapeState::BattlescapeState() :
 		_icons->setPixel(46, 44, 8);
 	}
 
+	// custom OXCE links button
+	if (Options::oxceLinks && _game->getMod()->getSurface("oxceLinks", false))
+	{
+		Surface* oxceLinks = _game->getMod()->getSurface("oxceLinks");
+		oxceLinks->blitNShade(_icons, 208, 0);
+
+		_numLayers->setVisible(false);
+	}
+
 	add(_rank, "rank", "battlescape", _icons);
 	add(_rankTiny, "rank", "battlescape", _icons);
 	add(_btnUnitUp, "buttonUnitUp", "battlescape", _icons);
@@ -369,8 +377,6 @@ BattlescapeState::BattlescapeState() :
 		add(_btnVisibleUnit[i]);
 		add(_numVisibleUnit[i]);
 	}
-	add(_btnToggleNV);
-	add(_btnTogglePL);
 	add(_warning, "warning", "battlescape", _icons);
 	add(_txtDebug);
 	add(_txtTooltip, "textTooltip", "battlescape", _icons);
@@ -476,7 +482,7 @@ BattlescapeState::BattlescapeState() :
 	_btnNextStop->onMouseOut((ActionHandler)&BattlescapeState::txtTooltipOut);
 
 	_btnShowLayers->onMouseClick((ActionHandler)&BattlescapeState::btnShowLayersClick);
-	_btnShowLayers->setTooltip("STR_MULTI_LEVEL_VIEW");
+	_btnShowLayers->setTooltip(Options::oxceLinks ? "STR_EXTENDED_LINKS" : "STR_MULTI_LEVEL_VIEW");
 	_btnShowLayers->onMouseIn((ActionHandler)&BattlescapeState::txtTooltipIn);
 	_btnShowLayers->onMouseOut((ActionHandler)&BattlescapeState::txtTooltipOut);
 	_btnShowLayers->onKeyboardPress((ActionHandler)&BattlescapeState::btnUfopaediaClick, Options::keyGeoUfopedia);
@@ -606,30 +612,6 @@ BattlescapeState::BattlescapeState() :
 	}
 	_txtVisibleUnitTooltip[VISIBLE_MAX] = "STR_CENTER_ON_WOUNDED_FRIEND";
 	_txtVisibleUnitTooltip[VISIBLE_MAX+1] = "STR_CENTER_ON_DIZZY_FRIEND";
-
-	_btnToggleNV->onMouseClick((ActionHandler)& BattlescapeState::btnAndroidNightVisionClick);
-	_btnToggleNV->setTooltip("STR_TOGGLE_NIGHT_VISION");
-	_btnToggleNV->onMouseIn((ActionHandler)& BattlescapeState::txtTooltipIn);
-	_btnToggleNV->onMouseOut((ActionHandler)& BattlescapeState::txtTooltipOut);
-	_btnToggleNV->drawRect(0, 0, 12, 12, 15);
-	_btnToggleNV->drawRect(1, 1, 10, 10, _indicatorBlue);
-#ifdef __ANDROID__
-	_btnToggleNV->setVisible(_save->getGlobalShade() > Options::oxceAutoNightVisionThreshold);
-#else
-	_btnToggleNV->setVisible(false);
-#endif
-
-	_btnTogglePL->onMouseClick((ActionHandler)&BattlescapeState::btnAndroidPersonalLightsClick);
-	_btnTogglePL->setTooltip("STR_TOGGLE_PERSONAL_LIGHTING");
-	_btnTogglePL->onMouseIn((ActionHandler)&BattlescapeState::txtTooltipIn);
-	_btnTogglePL->onMouseOut((ActionHandler)&BattlescapeState::txtTooltipOut);
-	_btnTogglePL->drawRect(0, 0, 12, 12, 15);
-	_btnTogglePL->drawRect(1, 1, 10, 10, _indicatorPurple);
-#ifdef __ANDROID__
-	_btnTogglePL->setVisible(_save->getGlobalShade() > Options::oxceAutoNightVisionThreshold);
-#else
-	_btnTogglePL->setVisible(false);
-#endif
 
 	_warning->setColor(_game->getMod()->getInterface("battlescape")->getElement("warning")->color2);
 	_warning->setTextColor(_game->getMod()->getInterface("battlescape")->getElement("warning")->color);
@@ -1177,7 +1159,7 @@ void BattlescapeState::mapClick(Action *action)
 			BattleUnit *bu = _save->selectUnit(pos);
 			if (bu && (bu->getVisible() || _save->getDebugMode()))
 			{
-				if (_save->getDebugMode() && (SDL_GetModState() & KMOD_CTRL) != 0)
+				if (_save->getDebugMode() && _game->isCtrlPressed())
 				{
 					// mind probe
 					popup(new UnitInfoState(bu, this, false, true));
@@ -1469,6 +1451,18 @@ void BattlescapeState::selectPreviousPlayerUnit(bool checkReselect, bool setRese
  */
 void BattlescapeState::btnShowLayersClick(Action *)
 {
+	if (Options::oxceLinks)
+	{
+		_game->pushState(new ExtendedBattlescapeLinksState(this, _save));
+	}
+	else
+	{
+		btnShowLayersClickOrig();
+	}
+}
+
+void BattlescapeState::btnShowLayersClickOrig()
+{
 	_numLayers->setValue(_map->getCamera()->toggleShowAllLayers());
 }
 
@@ -1707,40 +1701,6 @@ void BattlescapeState::btnVisibleUnitClick(Action *action)
 			}
 		}
 		_map->getCamera()->centerOnPosition(position);
-	}
-
-	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
-#ifdef __MOBILE__
-	_longPressTimer->stop();
-#endif
-}
-
-/**
- * Toggles night vision (purely cosmetic).
- * @param action Pointer to an action.
- */
-void BattlescapeState::btnAndroidNightVisionClick(Action *action)
-{
-	if (allowButtons())
-	{
-		_map->toggleNightVision();
-	}
-
-	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
-#ifdef __MOBILE__
-	_longPressTimer->stop();
-#endif
-}
-
-/**
- * Toggles personal lights (NOT cosmetic!).
- * @param action Pointer to an action.
- */
-void BattlescapeState::btnAndroidPersonalLightsClick(Action *action)
-{
-	if (allowButtons())
-	{
-		_save->getTileEngine()->togglePersonalLighting();
 	}
 
 	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
@@ -2079,7 +2039,11 @@ void BattlescapeState::updateSoldierInfo(bool checkFOV)
 		{
 			// show rank (vanilla behaviour)
 			SurfaceSet *texture = _game->getMod()->getSurfaceSet("SMOKE.PCK");
-			texture->getFrame(soldier->getRankSpriteBattlescape())->blitNShade(_rank, 0, 0);
+			auto frame = texture->getFrame(soldier->getRankSpriteBattlescape());
+			if (frame)
+			{
+				frame->blitNShade(_rank, 0, 0);
+			}
 		}
 		else
 		{
@@ -2659,9 +2623,9 @@ inline void BattlescapeState::handle(Action *action)
 			if (action->getDetails()->type == SDL_KEYDOWN)
 			{
 				SDL_Keycode key = action->getDetails()->key.keysym.sym;
-				bool ctrlPressed = (SDL_GetModState() & KMOD_CTRL) != 0;
-				bool shiftPressed = (SDL_GetModState() & KMOD_SHIFT) != 0;
-				bool altPressed = (SDL_GetModState() & KMOD_ALT) != 0;
+				bool ctrlPressed = _game->isCtrlPressed();
+				bool shiftPressed = _game->isShiftPressed();
+				bool altPressed = _game->isAltPressed();
 
 				// "ctrl-b" - reopen briefing
 				if (key == SDLK_b && ctrlPressed)

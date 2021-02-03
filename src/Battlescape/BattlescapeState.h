@@ -64,7 +64,6 @@ private:
 	InteractiveSurface *_btnVisibleUnit[VISIBLE_MAX];
 	NumberText *_numVisibleUnit[VISIBLE_MAX];
 	BattleUnit *_visibleUnit[VISIBLE_MAX];
-	InteractiveSurface *_btnToggleNV, *_btnTogglePL;
 	WarningMessage *_warning;
 	Text *_txtName;
 	NumberText *_numTimeUnits, *_numEnergy, *_numHealth, *_numMorale, *_numLayers;
@@ -180,6 +179,7 @@ public:
 	void btnPrevSoldierClick(Action *action);
 	/// Handler for clicking the Show Layers button.
 	void btnShowLayersClick(Action *action);
+	void btnShowLayersClickOrig();
 	/// Handler for clicking the Ufopaedia button.
 	void btnUfopaediaClick(Action *action);
 	/// Handler for clicking the Help button.
@@ -196,10 +196,6 @@ public:
 	void btnRightHandItemClick(Action *action);
 	/// Handler for clicking a visible unit button.
 	void btnVisibleUnitClick(Action *action);
-	/// Handler for clicking the Toggle Night Vision helper button.
-	void btnAndroidNightVisionClick(Action *action);
-	/// Handler for clicking the Toggle Personal Lights helper button.
-	void btnAndroidPersonalLightsClick(Action *action);
 	/// Handler for clicking the launch rocket button.
 	void btnLaunchClick(Action *action);
 	/// Handler for clicking the use psi button.

@@ -564,7 +564,7 @@ void OptionsVideoState::resize(int &dX, int &dY)
 void OptionsVideoState::handle(Action *action)
 {
 	State::handle(action);
-	if (action->getDetails()->key.keysym.sym == SDLK_g && (SDL_GetModState() & KMOD_CTRL) != 0)
+	if (action->getDetails()->key.keysym.sym == SDLK_g && _game->isCtrlPressed())
 	{
 		_btnLockMouse->setPressed(Options::captureMouse);
 	}
