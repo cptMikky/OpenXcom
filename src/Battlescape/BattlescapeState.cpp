@@ -661,6 +661,17 @@ BattlescapeState::BattlescapeState() :
 	_btnSkills->onMouseClick((ActionHandler)&BattlescapeState::btnSkillsClick);
 	_btnSkills->onKeyboardPress((ActionHandler)&BattlescapeState::btnSkillsClick, Options::keyBattleUseSpecial);
 
+	_btnCtrl->onMousePress((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnCtrl->onMouseRelease((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnAlt->onMousePress((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnAlt->onMouseRelease((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnShift->onMousePress((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnShift->onMouseRelease((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnRMB->onMousePress((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnRMB->onMouseRelease((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnMMB->onMousePress((ActionHandler)&BattlescapeState::consumeEvent);
+	_btnMMB->onMouseRelease((ActionHandler)&BattlescapeState::consumeEvent);
+
 	_btnCtrl->onMouseClick((ActionHandler)&BattlescapeState::btnCtrlClick);
 	_btnAlt->onMouseClick((ActionHandler)&BattlescapeState::btnAltClick);
 	_btnShift->onMouseClick((ActionHandler)&BattlescapeState::btnShiftClick);
