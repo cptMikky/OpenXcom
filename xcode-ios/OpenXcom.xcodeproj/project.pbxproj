@@ -16,6 +16,9 @@
 		5B5F680D2391B9A100D2D740 /* OptionsFoldersState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B5F68012391B9A000D2D740 /* OptionsFoldersState.cpp */; };
 		5B76D7A8241000F800F6D311 /* SkillMenuState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B76D7A7241000F800F6D311 /* SkillMenuState.cpp */; };
 		5B76D7AB2410011D00F6D311 /* RuleSkill.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B76D7AA2410011D00F6D311 /* RuleSkill.cpp */; };
+		5B7A846625D94084003698D9 /* ExtendedGeoscapeLinksState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A846525D94084003698D9 /* ExtendedGeoscapeLinksState.cpp */; };
+		5B7A846C25D94098003698D9 /* ExtendedInventoryLinksState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A846925D94097003698D9 /* ExtendedInventoryLinksState.cpp */; };
+		5B7A846D25D94098003698D9 /* ExtendedBattlescapeLinksState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A846A25D94098003698D9 /* ExtendedBattlescapeLinksState.cpp */; };
 		5B7C32DB23BA240A0070A6D9 /* HitLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C32CF23BA240A0070A6D9 /* HitLog.cpp */; };
 		5B7C32DE23BA241C0070A6D9 /* TurnDiaryState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C32DC23BA241B0070A6D9 /* TurnDiaryState.cpp */; };
 		5B8049FD226F8E12004E517F /* GlobalManufactureState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5B8049F1226F8E12004E517F /* GlobalManufactureState.cpp */; };
@@ -522,6 +525,12 @@
 		5B76D7A7241000F800F6D311 /* SkillMenuState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkillMenuState.cpp; sourceTree = "<group>"; };
 		5B76D7A92410011D00F6D311 /* RuleSkill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RuleSkill.h; sourceTree = "<group>"; };
 		5B76D7AA2410011D00F6D311 /* RuleSkill.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RuleSkill.cpp; sourceTree = "<group>"; };
+		5B7A845A25D94084003698D9 /* ExtendedGeoscapeLinksState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtendedGeoscapeLinksState.h; sourceTree = "<group>"; };
+		5B7A846525D94084003698D9 /* ExtendedGeoscapeLinksState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendedGeoscapeLinksState.cpp; sourceTree = "<group>"; };
+		5B7A846825D94097003698D9 /* ExtendedInventoryLinksState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtendedInventoryLinksState.h; sourceTree = "<group>"; };
+		5B7A846925D94097003698D9 /* ExtendedInventoryLinksState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendedInventoryLinksState.cpp; sourceTree = "<group>"; };
+		5B7A846A25D94098003698D9 /* ExtendedBattlescapeLinksState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendedBattlescapeLinksState.cpp; sourceTree = "<group>"; };
+		5B7A846B25D94098003698D9 /* ExtendedBattlescapeLinksState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExtendedBattlescapeLinksState.h; sourceTree = "<group>"; };
 		5B7C32CF23BA240A0070A6D9 /* HitLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HitLog.cpp; sourceTree = "<group>"; };
 		5B7C32DA23BA240A0070A6D9 /* HitLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitLog.h; sourceTree = "<group>"; };
 		5B7C32DC23BA241B0070A6D9 /* TurnDiaryState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TurnDiaryState.cpp; sourceTree = "<group>"; };
@@ -1515,6 +1524,8 @@
 		B283421C201F6D9B00BAEC9D /* Geoscape */ = {
 			isa = PBXGroup;
 			children = (
+				5B7A846525D94084003698D9 /* ExtendedGeoscapeLinksState.cpp */,
+				5B7A845A25D94084003698D9 /* ExtendedGeoscapeLinksState.h */,
 				5BD535AC2461B54B0041673F /* DogfightExperienceState.cpp */,
 				5BD535AD2461B54C0041673F /* DogfightExperienceState.h */,
 				5B95F033233D1ADB0018C910 /* GeoscapeEventState.cpp */,
@@ -1820,6 +1831,10 @@
 		B283430A201F6D9C00BAEC9D /* Battlescape */ = {
 			isa = PBXGroup;
 			children = (
+				5B7A846A25D94098003698D9 /* ExtendedBattlescapeLinksState.cpp */,
+				5B7A846B25D94098003698D9 /* ExtendedBattlescapeLinksState.h */,
+				5B7A846925D94097003698D9 /* ExtendedInventoryLinksState.cpp */,
+				5B7A846825D94097003698D9 /* ExtendedInventoryLinksState.h */,
 				5BD5359F2461B53B0041673F /* InventoryPersonalState.cpp */,
 				5BD535AA2461B53C0041673F /* InventoryPersonalState.h */,
 				5B76D7A7241000F800F6D311 /* SkillMenuState.cpp */,
@@ -2592,6 +2607,7 @@
 				B28344D5201F6D9E00BAEC9D /* BaseFacility.cpp in Sources */,
 				B2834589201F6D9E00BAEC9D /* MapData.cpp in Sources */,
 				B28344EF201F6D9E00BAEC9D /* Region.cpp in Sources */,
+				5B7A846625D94084003698D9 /* ExtendedGeoscapeLinksState.cpp in Sources */,
 				B28344C8201F6D9E00BAEC9D /* CrossPlatform.cpp in Sources */,
 				B283450B201F6D9E00BAEC9D /* PromotionsState.cpp in Sources */,
 				B283457E201F6D9E00BAEC9D /* MapDataSet.cpp in Sources */,
@@ -2603,6 +2619,7 @@
 				B283454E201F6D9E00BAEC9D /* SoldierArmorState.cpp in Sources */,
 				5BD0BB352242E0C1008E6DFB /* RuleDamageType.cpp in Sources */,
 				B28344F0201F6D9E00BAEC9D /* SavedBattleGame.cpp in Sources */,
+				5B7A846D25D94098003698D9 /* ExtendedBattlescapeLinksState.cpp in Sources */,
 				B28341D8201F6D7E00BAEC9D /* lodepng.cpp in Sources */,
 				B2834527201F6D9E00BAEC9D /* UfopaediaSelectState.cpp in Sources */,
 				B2834482201F6D9D00BAEC9D /* OptionsAdvancedState.cpp in Sources */,
@@ -2719,6 +2736,7 @@
 				5BD0BADA2242E009008E6DFB /* SoldierAvatarState.cpp in Sources */,
 				B28344FA201F6D9E00BAEC9D /* ActionMenuItem.cpp in Sources */,
 				B28344AE201F6D9E00BAEC9D /* adlplayer.cpp in Sources */,
+				5B7A846C25D94098003698D9 /* ExtendedInventoryLinksState.cpp in Sources */,
 				B283446E201F6D9D00BAEC9D /* SlideshowState.cpp in Sources */,
 				B2834478201F6D9D00BAEC9D /* ConfirmLoadState.cpp in Sources */,
 				5BD0BADF2242E009008E6DFB /* CraftPilotsState.cpp in Sources */,
