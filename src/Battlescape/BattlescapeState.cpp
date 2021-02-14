@@ -1778,7 +1778,7 @@ void BattlescapeState::btnCtrlClick(Action* action)
 		_btnCtrl->toggle(_game->getCtrlPressedFlag());
 	}
 
-	action->getDetails()->type = SDL_NOEVENT; // consume the event
+	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
 }
 
 void BattlescapeState::btnAltClick(Action* action)
@@ -1789,7 +1789,7 @@ void BattlescapeState::btnAltClick(Action* action)
 		_btnAlt->toggle(_game->getAltPressedFlag());
 	}
 
-	action->getDetails()->type = SDL_NOEVENT; // consume the event
+	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
 }
 
 void BattlescapeState::btnShiftClick(Action* action)
@@ -1800,7 +1800,7 @@ void BattlescapeState::btnShiftClick(Action* action)
 		_btnShift->toggle(_game->getShiftPressedFlag());
 	}
 
-	action->getDetails()->type = SDL_NOEVENT; // consume the event
+	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
 }
 
 void BattlescapeState::btnRMBClick(Action* action)
@@ -1816,7 +1816,7 @@ void BattlescapeState::btnRMBClick(Action* action)
 		}
 	}
 
-	action->getDetails()->type = SDL_NOEVENT; // consume the event
+	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
 }
 
 void BattlescapeState::btnMMBClick(Action* action)
@@ -1832,7 +1832,7 @@ void BattlescapeState::btnMMBClick(Action* action)
 		}
 	}
 
-	action->getDetails()->type = SDL_NOEVENT; // consume the event
+	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
 }
 
 /**
