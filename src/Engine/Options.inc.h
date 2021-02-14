@@ -80,6 +80,7 @@ OPT bool oxceRememberDisabledCraftWeapons;
 OPT bool oxceEnableOffCentreShooting;
 
 // OXCE hidden, accessible only via options.cfg
+OPT bool oxceFatFingerLinks;
 OPT bool oxceHighlightNewTopicsHidden;
 OPT int oxceInterceptGuiMaintenanceTimeHidden;
 OPT bool oxceEnableUnitResponseSounds;
