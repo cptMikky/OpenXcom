@@ -4426,6 +4426,7 @@ void Mod::loadVanillaResources()
 	_sets["CustomArmorPreviews"] = new SurfaceSet(12, 20);
 	_sets["CustomItemPreviews"] = new SurfaceSet(12, 20);
 	_sets["TinyRanks"] = new SurfaceSet(7, 7);
+	_sets["Touch"] = new SurfaceSet(32, 24);
 
 	// Load palettes
 	const char *pal[] = { "PAL_GEOSCAPE", "PAL_BASESCAPE", "PAL_GRAPHS", "PAL_UFOPAEDIA", "PAL_BATTLEPEDIA" };
@@ -4690,6 +4691,10 @@ void Mod::loadVanillaResources()
 		{
 			SurfaceSet* s = _sets["TinyRanks"];
 			s->setMaxSharedFrames(6);
+		}
+		{
+			SurfaceSet* s = _sets["Touch"];
+			s->setMaxSharedFrames(10);
 		}
 	}
 	{
@@ -5580,6 +5585,17 @@ void getSkillScript(const Mod* mod, const RuleSkill* &skill, const std::string &
 		skill = nullptr;
 	}
 }
+void getRuleResearch(const Mod* mod, const RuleResearch*& rule, const std::string& name)
+{
+	if (mod)
+	{
+		rule = mod->getResearch(name);
+	}
+	else
+	{
+		rule = nullptr;
+	}
+}
 void getSoldierScript(const Mod* mod, const RuleSoldier* &soldier, const std::string &name)
 {
 	if (mod)
@@ -5628,6 +5644,7 @@ void Mod::ScriptRegister(ScriptParserBase *parser)
 	mod.add<&getItemScript>("getRuleItem");
 	mod.add<&getArmorScript>("getRuleArmor");
 	mod.add<&getSkillScript>("getRuleSkill");
+	mod.add<&getRuleResearch>("getRuleResearch");
 	mod.add<&getSoldierScript>("getRuleSoldier");
 	mod.add<&getInvenotryScript>("getRuleInventory");
 	mod.add<&Mod::getInventoryRightHand>("getRuleInventoryRightHand");

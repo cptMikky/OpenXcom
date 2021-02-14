@@ -1130,6 +1130,9 @@
     <ClCompile Include="Battlescape\ExtendedBattlescapeLinksState.cpp">
       <Filter>Battlescape</Filter>
     </ClCompile>
+    <ClCompile Include="Battlescape\ExtendedInventoryLinksState.cpp">
+      <Filter>Battlescape</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -2319,6 +2322,9 @@
       <Filter>Geoscape</Filter>
     </ClInclude>
     <ClInclude Include="Battlescape\ExtendedBattlescapeLinksState.h">
+      <Filter>Battlescape</Filter>
+    </ClInclude>
+    <ClInclude Include="Battlescape\ExtendedInventoryLinksState.h">
       <Filter>Battlescape</Filter>
     </ClInclude>
   </ItemGroup>
