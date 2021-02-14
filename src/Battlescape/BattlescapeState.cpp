@@ -1779,6 +1779,9 @@ void BattlescapeState::btnCtrlClick(Action* action)
 	}
 
 	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
+#ifdef __MOBILE__
+	_longPressTimer->stop();
+#endif
 }
 
 void BattlescapeState::btnAltClick(Action* action)
@@ -1790,6 +1793,9 @@ void BattlescapeState::btnAltClick(Action* action)
 	}
 
 	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
+#ifdef __MOBILE__
+	_longPressTimer->stop();
+#endif
 }
 
 void BattlescapeState::btnShiftClick(Action* action)
@@ -1801,6 +1807,9 @@ void BattlescapeState::btnShiftClick(Action* action)
 	}
 
 	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
+#ifdef __MOBILE__
+	_longPressTimer->stop();
+#endif
 }
 
 void BattlescapeState::btnRMBClick(Action* action)
@@ -1817,6 +1826,9 @@ void BattlescapeState::btnRMBClick(Action* action)
 	}
 
 	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
+#ifdef __MOBILE__
+	_longPressTimer->stop();
+#endif
 }
 
 void BattlescapeState::btnMMBClick(Action* action)
@@ -1833,6 +1845,9 @@ void BattlescapeState::btnMMBClick(Action* action)
 	}
 
 	action->getDetails()->type = SDL_FIRSTEVENT; // consume the event
+#ifdef __MOBILE__
+	_longPressTimer->stop();
+#endif
 }
 
 /**
