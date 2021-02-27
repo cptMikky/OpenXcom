@@ -99,7 +99,7 @@ BattlescapeState::BattlescapeState() :
 	_isMouseScrolling(false), _isMouseScrolled(false),
 	_xBeforeMouseScrolling(0), _yBeforeMouseScrolling(0),
 	_totalMouseMoveX(0), _totalMouseMoveY(0), _mouseMovedOverThreshold(0), _mouseOverIcons(false),
-	_autosave(false),
+	_autosave(0),
 	_numberOfDirectlyVisibleUnits(0), _numberOfEnemiesTotal(0), _numberOfEnemiesTotalPlusWounded(0),
 	_swipeFromSoldier(false), _multiGestureProcess(false)
 {
@@ -586,11 +586,6 @@ BattlescapeState::BattlescapeState() :
 	_btnReserveKneel->onMouseOut((ActionHandler)&BattlescapeState::txtTooltipOut);
 	_btnReserveKneel->allowToggleInversion();
 
-	if (Options::oxceLinks)
-	{
-		// Note: hidden behind an option so that the visual click effect is not done in "vanilla"
-		_btnZeroTUs->onMouseClick((ActionHandler)&BattlescapeState::btnZeroTUsClick, SDL_BUTTON_LEFT);
-	}
 	_btnZeroTUs->onMouseClick((ActionHandler)&BattlescapeState::btnZeroTUsClick, SDL_BUTTON_RIGHT);
 #ifdef __MOBILE__
 	_btnZeroTUs->onMousePress((ActionHandler)&BattlescapeState::btnZeroTUsPress);
@@ -612,10 +607,14 @@ BattlescapeState::BattlescapeState() :
 	// automatic night vision
 	if (_save->getGlobalShade() > Options::oxceAutoNightVisionThreshold)
 	{
-		// turn personal lights off
-		//_save->getTileEngine()->togglePersonalLighting();
-		// turn night vision on
-		_map->toggleNightVision();
+		bool ignore = (enviro && enviro->ignoreAutoNightVisionUserSetting());
+		if (!ignore)
+		{
+			// turn personal lights off
+			//_save->getTileEngine()->togglePersonalLighting();
+			// turn night vision on
+			_map->toggleNightVision();
+		}
 	}
 
 	SDL_Keycode buttons[] = {Options::keyBattleCenterEnemy1,
@@ -860,16 +859,17 @@ void BattlescapeState::init()
 	_txtTooltip->setText("");
 	_btnReserveKneel->toggle(_save->getKneelReserved());
 	_battleGame->setKneelReserved(_save->getKneelReserved());
-	if (_autosave)
+	if (_autosave > 0)
 	{
-		_autosave = false;
+		int currentTurn = _autosave;
+		_autosave = 0;
 		if (_game->getSavedGame()->isIronman())
 		{
 			_game->pushState(new SaveGameState(OPT_BATTLESCAPE, SAVE_IRONMAN, _palette));
 		}
 		else if (Options::autosave)
 		{
-			_game->pushState(new SaveGameState(OPT_BATTLESCAPE, SAVE_AUTO_BATTLESCAPE, _palette));
+			_game->pushState(new SaveGameState(OPT_BATTLESCAPE, SAVE_AUTO_BATTLESCAPE, _palette, currentTurn));
 		}
 	}
 }
@@ -2426,7 +2426,7 @@ void BattlescapeState::updateSoldierInfo(bool checkFOV)
 		// go through all wounded units under player's control (incl. unconscious)
 		for (std::vector<BattleUnit*>::iterator i = _battleGame->getSave()->getUnits()->begin(); i != _battleGame->getSave()->getUnits()->end() && j < VISIBLE_MAX; ++i)
 		{
-			if ((*i)->getFaction() == FACTION_PLAYER && (*i)->getStatus() != STATUS_DEAD && (*i)->getStatus() != STATUS_IGNORE_ME && (*i)->getFatalWounds() > 0 && (*i)->indicatorsAreEnabled())
+			if ((*i)->getFaction() == FACTION_PLAYER && (*i)->getStatus() != STATUS_DEAD && !(*i)->isIgnored() && (*i)->getFatalWounds() > 0 && (*i)->indicatorsAreEnabled())
 			{
 				_btnVisibleUnit[j]->setTooltip(_txtVisibleUnitTooltip[VISIBLE_MAX]);
 				_btnVisibleUnit[j]->setVisible(true);
@@ -2805,7 +2805,7 @@ inline void BattlescapeState::handle(Action *action)
 				_map->setSelectorPosition((_cursorPosition.x - _game->getScreen()->getCursorLeftBlackBand()) / action->getXScale(), (_cursorPosition.y - _game->getScreen()->getCursorTopBlackBand()) / action->getYScale());
 			}
 
-			if (action->getDetails()->type == SDL_MOUSEBUTTONDOWN)
+			if (Options::thumbButtons && action->getDetails()->type == SDL_MOUSEBUTTONDOWN)
 			{
 				if (action->getDetails()->button.button == SDL_BUTTON_X1)
 				{
@@ -3672,11 +3672,6 @@ void BattlescapeState::btnReserveKneelClick(Action *action)
  */
 void BattlescapeState::btnZeroTUsClick(Action *action)
 {
-	if (!_game->isRightClick(action, true))
-	{
-		return;
-	}
-
 	if (allowButtons())
 	{
 		SDL_Event ev;
@@ -4046,9 +4041,9 @@ void BattlescapeState::stopScrolling(Action *action)
 /**
  * Autosave the game the next time the battlescape is displayed.
  */
-void BattlescapeState::autosave()
+void BattlescapeState::autosave(int currentTurn)
 {
-	_autosave = true;
+	_autosave = currentTurn;
 }
 
 /**

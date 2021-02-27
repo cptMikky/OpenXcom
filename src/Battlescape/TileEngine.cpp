@@ -1980,7 +1980,8 @@ TileEngine::ReactionScore TileEngine::determineReactionType(BattleUnit *unit, Ba
 	{
 		// has a gun capable of snap shot with ammo
 		if (weapon->getRules()->getBattleType() == BT_FIREARM &&
-			Position::distance2d(unit->getPosition(), target->getPosition()) < weapon->getRules()->getMaxRange() &&
+			// Note: distance calculation isn't precise for 2x2 units here, but changing it would likely require also changing the targeting of 2x2 units
+			Position::distance2dSq(unit->getPosition(), target->getPosition()) < weapon->getRules()->getMaxRangeSq() &&
 			weapon->getAmmoForAction(BA_SNAPSHOT) &&
 			BattleActionCost(BA_SNAPSHOT, unit, weapon).haveTU())
 		{
@@ -3877,6 +3878,28 @@ void TileEngine::togglePersonalLighting()
 }
 
 /**
+ * Calculates the distance squared between a unit and a point position.
+ * @param unit The unit.
+ * @param pos The point position.
+ * @param considerZ Whether to consider the z coordinate.
+ * @return Distance squared.
+ */
+int TileEngine::distanceUnitToPositionSq(BattleUnit* unit, const Position& pos, bool considerZ) const
+{
+	int x = unit->getPosition().x - pos.x;
+	int y = unit->getPosition().y - pos.y;
+	int z = considerZ ? (unit->getPosition().z - pos.z) : 0;
+	if (unit->getArmor()->getSize() > 1)
+	{
+		if (unit->getPosition().x < pos.x)
+			x++;
+		if (unit->getPosition().y < pos.y)
+			y++;
+	}
+	return x*x + y*y + z*z;
+}
+
+/**
  * Calculate strength of psi attack based on range and victim.
  * @param type Type of attack.
  * @param attacker Unit attacking.
@@ -4365,6 +4388,20 @@ void TileEngine::itemDropInventory(Tile *t, BattleUnit *unit, bool unprimeItems,
 			{
 				if (deleteFixedItems)
 				{
+					// first unload all ammo
+					for (int slot = 0; slot < RuleItem::AmmoSlotMax; ++slot)
+					{
+						if (i->needsAmmoForSlot(slot) && i->getAmmoForSlot(slot))
+						{
+							// unload the existing ammo (if any) from the weapon
+							BattleItem* oldAmmo = i->setAmmoForSlot(slot, nullptr);
+							if (oldAmmo)
+							{
+								itemDrop(t, oldAmmo, false);
+							}
+						}
+					}
+
 					// delete fixed items completely (e.g. when changing armor)
 					i->setOwner(nullptr);
 					_save->removeItem(i);
@@ -4378,6 +4415,12 @@ void TileEngine::itemDropInventory(Tile *t, BattleUnit *unit, bool unprimeItems,
 			}
 		}
 	);
+
+	// handle special built-in items
+	if (deleteFixedItems)
+	{
+		unit->removeSpecialWeapons(_save);
+	}
 }
 
 /**

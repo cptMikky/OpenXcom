@@ -1744,7 +1744,7 @@ int BattleUnit::getFallingPhase() const
  */
 bool BattleUnit::isOut() const
 {
-	return _status == STATUS_DEAD || _status == STATUS_UNCONSCIOUS || _status == STATUS_IGNORE_ME;
+	return _status == STATUS_DEAD || _status == STATUS_UNCONSCIOUS || isIgnored();
 }
 
 /**
@@ -1754,6 +1754,14 @@ bool BattleUnit::isOut() const
 bool BattleUnit::isOutThresholdExceed() const
 {
 	return getHealth() <= 0 || getHealth() <= getStunlevel();
+}
+
+/**
+ * Unit is removed from game.
+ */
+bool BattleUnit::isIgnored() const
+{
+	return _status == STATUS_IGNORE_ME;
 }
 
 /**
@@ -2355,7 +2363,8 @@ void BattleUnit::prepareMorale(int morale)
 		if (RNG::generate(1,100) <= chance)
 		{
 			int type = RNG::generate(0,100);
-			_status = (type<=33?STATUS_BERSERK:STATUS_PANICKING); // 33% chance of berserk, panic can mean freeze or flee, but that is determined later
+			int berserkChance = _unitRules ? _unitRules->getBerserkChance() : 33;
+			_status = (type <= berserkChance ? STATUS_BERSERK : STATUS_PANICKING); // 33% chance of berserk, panic can mean freeze or flee, but that is determined later
 			_wantsToSurrender = true;
 		}
 		else
@@ -2378,7 +2387,7 @@ void BattleUnit::prepareMorale(int morale)
  */
 void BattleUnit::prepareNewTurn(bool fullProcess)
 {
-	if (_status == STATUS_IGNORE_ME)
+	if (isIgnored())
 	{
 		return;
 	}
@@ -4535,52 +4544,86 @@ void BattleUnit::goToTimeOut()
  * Set special weapon that is handled outside inventory.
  * @param save
  */
-void BattleUnit::setSpecialWeapon(SavedBattleGame *save)
+void BattleUnit::setSpecialWeapon(SavedBattleGame *save, bool updateFromSave)
 {
 	const Mod *mod = save->getMod();
-	const RuleItem *item = 0;
 	int i = 0;
+
+	if (_specWeapon[0] && updateFromSave)
+	{
+		// new saves already contain special built-in weapons, we can stop here
+		return;
+		// old saves still need the below functionality to work properly
+	}
+
+	auto addItem = [&](const RuleItem *item)
+	{
+		if (item && i < SPEC_WEAPON_MAX)
+		{
+			//TODO: move this check to load of ruleset
+			if ((item->getBattleType() == BT_FIREARM || item->getBattleType() == BT_MELEE) && !item->getClipSize())
+			{
+				throw Exception("Weapon " + item->getType() + " is used as a special built-in weapon on unit " + getUnitRules()->getType() + " but doesn't have it's own ammo - give it a clipSize!");
+			}
+
+			// we already have an item of this type, skip it
+			for (auto* w : _specWeapon)
+			{
+				if (w && w->getRules() == item)
+				{
+					return;
+				}
+			}
+
+			_specWeapon[i++] = save->createItemForUnitSpecialBuiltin(item, this);
+		}
+	};
 
 	if (getUnitRules())
 	{
-		item = mod->getItem(getUnitRules()->getMeleeWeapon());
-		if (item && i < SPEC_WEAPON_MAX)
-		{
-			if ((item->getBattleType() == BT_FIREARM || item->getBattleType() == BT_MELEE) && !item->getClipSize())
-			{
-				throw Exception("Weapon " + item->getType() + " is used as a special weapon on unit " + getUnitRules()->getType() + " but doesn't have it's own ammo - give it a clipSize!");
-			}
-			_specWeapon[i++] = save->createItemForUnitBuildin(item, this);
-		}
+		addItem(mod->getItem(getUnitRules()->getMeleeWeapon()));
 	}
 
-	item = getArmor()->getSpecialWeapon();
-	if (item && (item->getBattleType() == BT_FIREARM || item->getBattleType() == BT_MELEE) && !item->getClipSize())
-	{
-		throw Exception("Weapon " + item->getType() + " is used as a special weapon on armor " + getArmor()->getType() + " but doesn't have it's own ammo - give it a clipSize!");
-	}
+	addItem(getArmor()->getSpecialWeapon());
 
-	if (item && i < SPEC_WEAPON_MAX)
-	{
-		_specWeapon[i++] = save->createItemForUnitBuildin(item, this);
-	}
 	if (getBaseStats()->psiSkill > 0 && getOriginalFaction() == FACTION_HOSTILE)
 	{
-		item = mod->getItem(getUnitRules()->getPsiWeapon());
-		if (item && i < SPEC_WEAPON_MAX)
-		{
-			_specWeapon[i++] = save->createItemForUnitBuildin(item, this);
-		}
+		addItem(mod->getItem(getUnitRules()->getPsiWeapon()));
 	}
 	if (getGeoscapeSoldier())
 	{
-		item = getGeoscapeSoldier()->getRules()->getSpecialWeapon();
-		if (item)
+		addItem(getGeoscapeSoldier()->getRules()->getSpecialWeapon());
+	}
+}
+
+/**
+ * Add/assign a special weapon loaded from a save.
+ */
+void BattleUnit::addLoadedSpecialWeapon(BattleItem* item)
+{
+	for (auto*& s : _specWeapon)
+	{
+		if (s == nullptr)
 		{
-			if (i < SPEC_WEAPON_MAX)
-			{
-				_specWeapon[i++] = save->createItemForUnitBuildin(item, this);
-			}
+			s = item;
+			return;
+		}
+	}
+	Log(LOG_ERROR) << "Failed to add special built-in item '" << item->getRules()->getType() << "' (id " << item->getId() << ") to unit '" << getType() << "' (id " << getId() << ")";
+}
+
+/**
+ * Remove all special weapons.
+ */
+void BattleUnit::removeSpecialWeapons(SavedBattleGame *save)
+{
+	for (auto*& s : _specWeapon)
+	{
+		if (s)
+		{
+			s->setOwner(nullptr); // stops being a special weapon, so that `removeItem` can remove it
+			save->removeItem(s);
+			s = nullptr;
 		}
 	}
 }
@@ -5422,6 +5465,48 @@ void getInventoryItemScript2(BattleUnit* bu, BattleItem *&foundItem, const RuleI
 	}
 }
 
+//TODO: move it to script bindings
+template<auto Member>
+void getListScript(BattleUnit* bu, BattleItem *&foundItem, int i)
+{
+	foundItem = nullptr;
+	if (bu)
+	{
+		auto& ptr = (bu->*Member);
+		if ((size_t)i < std::size(ptr))
+		{
+			foundItem = ptr[i];
+		}
+	}
+}
+
+//TODO: move it to script bindings
+template<auto Member>
+void getListSizeScript(BattleUnit* bu, int& i)
+{
+	i = 0;
+	if (bu)
+	{
+		auto& ptr = (bu->*Member);
+		i = (int)std::size(ptr);
+	}
+}
+
+template<auto Member>
+void getListSizeHackScript(BattleUnit* bu, int& i)
+{
+	i = 0;
+	if (bu)
+	{
+		auto& ptr = (bu->*Member);
+		//count number of elemets unitl null, and inteprted this as size of array
+		i = std::distance(
+			std::begin(ptr),
+			std::find(std::begin(ptr), std::end(ptr), nullptr)
+		);
+	}
+}
+
 
 std::string debugDisplayScript(const BattleUnit* bu)
 {
@@ -5502,9 +5587,6 @@ void BattleUnit::ScriptRegister(ScriptParserBase* parser)
 	bu.add<&BattleUnit::getTurretDirection>("getTurretDirection");
 	bu.add<&BattleUnit::getWalkingPhase>("getWalkingPhase");
 	bu.add<&setSpawnUnitScript>("setSpawnUnit");
-	bu.add<&getInventoryItemScript>("getInventoryItem");
-	bu.add<&getInventoryItemScript1>("getInventoryItem");
-	bu.add<&getInventoryItemScript2>("getInventoryItem");
 	bu.add<&BattleUnit::disableIndicators>("disableIndicators");
 
 
@@ -5563,12 +5645,20 @@ void BattleUnit::ScriptRegister(ScriptParserBase* parser)
 	bu.addFunc<getRuleSoldierScript>("getRuleSoldier");
 	bu.addFunc<getGeoscapeSoldierScript>("getGeoscapeSoldier");
 	bu.addFunc<getGeoscapeSoldierConstScript>("getGeoscapeSoldier");
+	bu.addFunc<reduceByBraveryScript>("reduceByBravery", "change first arg1 to `(110 - bravery) * arg1 / 100`");
+	bu.addFunc<reduceByResistanceScript>("reduceByResistance", "change first arg1 to `arg1 * resist[arg2]`");
+
 	bu.addFunc<getRightHandWeaponScript>("getRightHandWeapon");
 	bu.addFunc<getRightHandWeaponConstScript>("getRightHandWeapon");
 	bu.addFunc<getLeftHandWeaponScript>("getLeftHandWeapon");
 	bu.addFunc<getLeftHandWeaponConstScript>("getLeftHandWeapon");
-	bu.addFunc<reduceByBraveryScript>("reduceByBravery", "change first arg1 to `(110 - bravery) * arg1 / 100`");
-	bu.addFunc<reduceByResistanceScript>("reduceByResistance", "change first arg1 to `arg1 * resist[arg2]`");
+	bu.add<&getInventoryItemScript>("getInventoryItem");
+	bu.add<&getInventoryItemScript1>("getInventoryItem");
+	bu.add<&getInventoryItemScript2>("getInventoryItem");
+	bu.add<&getListSizeScript<&BattleUnit::_inventory>>("getInventoryItem.size");
+	bu.add<&getListScript<&BattleUnit::_inventory>>("getInventoryItem");
+	bu.add<&getListSizeHackScript<&BattleUnit::_specWeapon>>("getSpecialItem.size");
+	bu.add<&getListScript<&BattleUnit::_specWeapon>>("getSpecialItem");
 
 	bu.add<&getPositionXScript>("getPosition.getX");
 	bu.add<&getPositionYScript>("getPosition.getY");
