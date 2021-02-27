@@ -56,6 +56,7 @@ private:
 	std::vector<SDL_DisplayMode> _res;
 	int _resCurrent;
 	std::vector<std::string> _langs, _filters;
+	std::vector<int> _scales, _reverseScales;
 
 	std::string ucWords(std::string str);
 	void updateDisplayResolution();

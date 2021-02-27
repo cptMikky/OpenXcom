@@ -504,6 +504,11 @@ void BattlescapeGame::endTurn()
 		{
 			for (BattleItem *item : *_save->getItems())
 			{
+				if (item->isOwnerIgnored())
+				{
+					continue;
+				}
+
 				const RuleItem *rule = item->getRules();
 				const Tile *tile = item->getTile();
 				BattleUnit *unit = item->getOwner();
@@ -536,6 +541,11 @@ void BattlescapeGame::endTurn()
 				{
 					statePushNext(expl);
 				}
+				else if (item->isSpecialWeapon())
+				{
+					// we can't remove special weapons, disable the fuse at least
+					item->setFuseTimer(-1);
+				}
 				else
 				{
 					_save->removeItem(item);
@@ -565,6 +575,10 @@ void BattlescapeGame::endTurn()
 		{
 			for (BattleItem *item : *_save->getItems())
 			{
+				if (item->isOwnerIgnored())
+				{
+					continue;
+				}
 				item->fuseTimerEvent();
 			}
 		}
@@ -644,7 +658,7 @@ void BattlescapeGame::endTurn()
 
 	// "escort the VIPs" missions don't end when all aliens are neutralized
 	// objective type MUST_DESTROY was already handled above
-	bool killingAllAliensIsNotEnough = (_save->getVIPSurvivalPercentage() > 0 && _save->getVIPEscapeType() != ESCAPE_NONE); 
+	bool killingAllAliensIsNotEnough = (_save->getVIPSurvivalPercentage() > 0 && _save->getVIPEscapeType() != ESCAPE_NONE);
 
 	bool battleComplete = (!killingAllAliensIsNotEnough && tally.liveAliens == 0) || tally.liveSoldiers == 0;
 
@@ -697,7 +711,7 @@ void BattlescapeGame::checkForCasualties(const RuleDamageType *damageType, Battl
 
 	for (std::vector<BattleUnit*>::iterator j = _save->getUnits()->begin(); j != _save->getUnits()->end(); ++j)
 	{
-		if ((*j)->getStatus() == STATUS_IGNORE_ME) continue;
+		if ((*j)->isIgnored()) continue;
 		BattleUnit *victim = (*j);
 		BattleUnit *murderer = origMurderer;
 
@@ -1762,6 +1776,14 @@ void BattlescapeGame::primaryAction(Position pos)
 					// no mind controlling allies, unwanted side effects
 					psiTargetAllowed = false;
 				}
+				else if (_currentAction.type == BA_PANIC && targetUnit->getUnitRules() && !targetUnit->getUnitRules()->canPanic())
+				{
+					psiTargetAllowed = false;
+				}
+				else if (_currentAction.type == BA_MINDCONTROL && targetUnit->getUnitRules() && !targetUnit->getUnitRules()->canBeMindControlled())
+				{
+					psiTargetAllowed = false;
+				}
 				if (psiTargetAllowed)
 				{
 					_currentAction.updateTU();
@@ -2235,7 +2257,11 @@ void BattlescapeGame::spawnFromPrimedItems()
 
 	for (std::vector<BattleItem*>::iterator i = _save->getItems()->begin(); i != _save->getItems()->end(); ++i)
 	{
-		if (!(*i)->getRules()->getSpawnUnit().empty() && !(*i)->getXCOMProperty())
+		if ((*i)->isOwnerIgnored())
+		{
+			continue;
+		}
+		if (!(*i)->getRules()->getSpawnUnit().empty() && !(*i)->getXCOMProperty() && !(*i)->isSpecialWeapon())
 		{
 			if ((*i)->getRules()->getBattleType() == BT_GRENADE && (*i)->getFuseTimer() == 0 && (*i)->isFuseEnabled())
 			{
@@ -2461,6 +2487,11 @@ BattleItem *BattlescapeGame::surveyItems(BattleAction *action, bool pickUpWeapon
 	// first fill a vector with items on the ground that were dropped on the alien turn, and have an attraction value.
 	for (std::vector<BattleItem*>::iterator i = _save->getItems()->begin(); i != _save->getItems()->end(); ++i)
 	{
+		if ((*i)->isOwnerIgnored())
+		{
+			continue;
+		}
+
 		if ((*i)->getRules()->getAttraction())
 		{
 			if ((*i)->getTurnFlag() || pickUpWeaponsMoreActively)
