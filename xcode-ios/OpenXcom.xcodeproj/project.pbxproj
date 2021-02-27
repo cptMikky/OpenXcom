@@ -39,7 +39,6 @@
 		5BD0BADE2242E009008E6DFB /* CraftPilotSelectState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BAD12242E008008E6DFB /* CraftPilotSelectState.cpp */; };
 		5BD0BADF2242E009008E6DFB /* CraftPilotsState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BAD22242E008008E6DFB /* CraftPilotsState.cpp */; };
 		5BD0BAE02242E009008E6DFB /* GlobalResearchState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BAD42242E008008E6DFB /* GlobalResearchState.cpp */; };
-		5BD0BAE12242E009008E6DFB /* ChangeHeadquartersState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BAD52242E008008E6DFB /* ChangeHeadquartersState.cpp */; };
 		5BD0BAF02242E02A008E6DFB /* InventoryLoadState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BAE32242E029008E6DFB /* InventoryLoadState.cpp */; };
 		5BD0BAF12242E02A008E6DFB /* ItemSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BAE52242E029008E6DFB /* ItemSprite.cpp */; };
 		5BD0BAF22242E02A008E6DFB /* InventorySaveState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BAE72242E029008E6DFB /* InventorySaveState.cpp */; };
@@ -550,7 +549,6 @@
 		5B95F03F233D1BB20018C910 /* GeoscapeEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoscapeEvent.h; sourceTree = "<group>"; };
 		5B95F040233D1BB20018C910 /* GeoscapeEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GeoscapeEvent.cpp; sourceTree = "<group>"; };
 		5BD0BAB42242E004008E6DFB /* CraftPilotSelectState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CraftPilotSelectState.h; sourceTree = "<group>"; };
-		5BD0BABF2242E005008E6DFB /* ChangeHeadquartersState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeHeadquartersState.h; sourceTree = "<group>"; };
 		5BD0BAC02242E005008E6DFB /* TechTreeSelectState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TechTreeSelectState.cpp; sourceTree = "<group>"; };
 		5BD0BAC12242E005008E6DFB /* TechTreeViewerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TechTreeViewerState.cpp; sourceTree = "<group>"; };
 		5BD0BAC22242E006008E6DFB /* TechTreeViewerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TechTreeViewerState.h; sourceTree = "<group>"; };
@@ -572,7 +570,6 @@
 		5BD0BAD22242E008008E6DFB /* CraftPilotsState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CraftPilotsState.cpp; sourceTree = "<group>"; };
 		5BD0BAD32242E008008E6DFB /* CraftPilotsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CraftPilotsState.h; sourceTree = "<group>"; };
 		5BD0BAD42242E008008E6DFB /* GlobalResearchState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GlobalResearchState.cpp; sourceTree = "<group>"; };
-		5BD0BAD52242E008008E6DFB /* ChangeHeadquartersState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ChangeHeadquartersState.cpp; sourceTree = "<group>"; };
 		5BD0BAE22242E028008E6DFB /* ItemSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemSprite.h; sourceTree = "<group>"; };
 		5BD0BAE32242E029008E6DFB /* InventoryLoadState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InventoryLoadState.cpp; sourceTree = "<group>"; };
 		5BD0BAE42242E029008E6DFB /* InventoryLoadState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InventoryLoadState.h; sourceTree = "<group>"; };
@@ -2059,8 +2056,6 @@
 				5B95F031233D1AA80018C910 /* SoldierBonusState.h */,
 				5B8049F1226F8E12004E517F /* GlobalManufactureState.cpp */,
 				5B8049FC226F8E12004E517F /* GlobalManufactureState.h */,
-				5BD0BAD52242E008008E6DFB /* ChangeHeadquartersState.cpp */,
-				5BD0BABF2242E005008E6DFB /* ChangeHeadquartersState.h */,
 				5BD0BAC42242E006008E6DFB /* CraftEquipmentLoadState.cpp */,
 				5BD0BAD02242E008008E6DFB /* CraftEquipmentLoadState.h */,
 				5BD0BACF2242E008008E6DFB /* CraftEquipmentSaveState.cpp */,
@@ -2838,7 +2833,6 @@
 				B2834552201F6D9E00BAEC9D /* CraftArmorState.cpp in Sources */,
 				B283448D201F6D9D00BAEC9D /* ResearchRequiredState.cpp in Sources */,
 				B283452D201F6D9E00BAEC9D /* ArticleStateCraftWeapon.cpp in Sources */,
-				5BD0BAE12242E009008E6DFB /* ChangeHeadquartersState.cpp in Sources */,
 				B2834580201F6D9E00BAEC9D /* RuleInventory.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
