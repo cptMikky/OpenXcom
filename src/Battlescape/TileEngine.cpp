@@ -1852,7 +1852,9 @@ std::vector<TileEngine::ReactionScore> TileEngine::getSpottingUnits(BattleUnit* 
 						{
 							BattleItem *weapon = rs.weapon;
 							int accuracy = BattleUnit::getFiringAccuracy(BattleActionAttack::GetBeforeShoot(rs.attackType, rs.unit, weapon), _save->getBattleGame()->getMod());
-							int distance = Position::distance2d((*i)->getPosition(), unit->getPosition());
+							int distanceSq = unit->distance3dToUnitSq((*i));
+							int distance = (int)std::ceil(sqrt(float(distanceSq)));
+
 							int upperLimit = weapon->getRules()->getSnapRange();
 							int lowerLimit = weapon->getRules()->getMinRange();
 							if (distance > upperLimit)
@@ -1864,7 +1866,7 @@ std::vector<TileEngine::ReactionScore> TileEngine::getSpottingUnits(BattleUnit* 
 								accuracy -= (lowerLimit - distance) * weapon->getRules()->getDropoff();
 							}
 
-							bool outOfRange = distance > weapon->getRules()->getMaxRange() + 1; // special handling for short ranges and diagonals simplified by +1
+							bool outOfRange = weapon->getRules()->isOutOfRange(distanceSq);
 
 							if (accuracy > _save->getBattleGame()->getMod()->getMinReactionAccuracy() && !outOfRange)
 							{
@@ -1980,8 +1982,7 @@ TileEngine::ReactionScore TileEngine::determineReactionType(BattleUnit *unit, Ba
 	{
 		// has a gun capable of snap shot with ammo
 		if (weapon->getRules()->getBattleType() == BT_FIREARM &&
-			// Note: distance calculation isn't precise for 2x2 units here, but changing it would likely require also changing the targeting of 2x2 units
-			Position::distance2dSq(unit->getPosition(), target->getPosition()) < weapon->getRules()->getMaxRangeSq() &&
+			!weapon->getRules()->isOutOfRange(unit->distance3dToUnitSq(target)) &&
 			weapon->getAmmoForAction(BA_SNAPSHOT) &&
 			BattleActionCost(BA_SNAPSHOT, unit, weapon).haveTU())
 		{
@@ -3878,28 +3879,6 @@ void TileEngine::togglePersonalLighting()
 }
 
 /**
- * Calculates the distance squared between a unit and a point position.
- * @param unit The unit.
- * @param pos The point position.
- * @param considerZ Whether to consider the z coordinate.
- * @return Distance squared.
- */
-int TileEngine::distanceUnitToPositionSq(BattleUnit* unit, const Position& pos, bool considerZ) const
-{
-	int x = unit->getPosition().x - pos.x;
-	int y = unit->getPosition().y - pos.y;
-	int z = considerZ ? (unit->getPosition().z - pos.z) : 0;
-	if (unit->getArmor()->getSize() > 1)
-	{
-		if (unit->getPosition().x < pos.x)
-			x++;
-		if (unit->getPosition().y < pos.y)
-			y++;
-	}
-	return x*x + y*y + z*z;
-}
-
-/**
  * Calculate strength of psi attack based on range and victim.
  * @param type Type of attack.
  * @param attacker Unit attacking.
@@ -3954,12 +3933,41 @@ bool TileEngine::psiAttack(BattleActionAttack attack, BattleUnit *victim)
 	// Mana experience - this is a temporary/experimental approach, can be improved later after modder feedback
 	attack.attacker->addManaExp(attack.weapon_item->getRules()->getManaExperience());
 
-	attack.attacker->addPsiSkillExp();
-	if (Options::allowPsiStrengthImprovement) victim->addPsiStrengthExp();
+	bool isDefaultExpTrainingMode = (attack.weapon_item->getRules()->getExperienceTrainingMode() == ETM_DEFAULT);
+	bool isNaturallyPsiCapable = true;
+	if (attack.attacker->getGeoscapeSoldier() && attack.attacker->getGeoscapeSoldier()->getCurrentStats()->psiSkill <= 0)
+	{
+		isNaturallyPsiCapable = false;
+	}
+	bool isPsiRequired = attack.weapon_item->getRules()->isPsiRequired();
+
+	if (isDefaultExpTrainingMode)
+	{
+		if (isNaturallyPsiCapable)
+		{
+			attack.attacker->addPsiSkillExp();
+		}
+	}
+	if (Options::allowPsiStrengthImprovement && isPsiRequired)
+	{
+		victim->addPsiStrengthExp(); // experience for the victim, not the attacker
+	}
+
 	if (psiAttackCalculate(attack, victim) > 0)
 	{
-		attack.attacker->addPsiSkillExp();
-		attack.attacker->addPsiSkillExp();
+		if (isDefaultExpTrainingMode)
+		{
+			if (isNaturallyPsiCapable)
+			{
+				attack.attacker->addPsiSkillExp();
+				attack.attacker->addPsiSkillExp();
+			}
+		}
+		else if (attack.type == BA_PANIC || attack.type == BA_MINDCONTROL)
+		{
+			// Note: BA_USE is handled elsewhere
+			awardExperience(attack, victim, false);
+		}
 
 		BattleUnitKills killStat;
 		killStat.setUnitStats(victim);
@@ -4009,9 +4017,9 @@ bool TileEngine::psiAttack(BattleActionAttack attack, BattleUnit *victim)
 	}
 	else
 	{
-		if (Options::allowPsiStrengthImprovement)
+		if (Options::allowPsiStrengthImprovement && isPsiRequired)
 		{
-			victim->addPsiStrengthExp();
+			victim->addPsiStrengthExp(); // experience for the victim, not the attacker
 		}
 		return false;
 	}
