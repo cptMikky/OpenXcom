@@ -3197,9 +3197,10 @@ void isResearchedScript(const SavedGame* sg, int& val, const RuleResearch* name)
 {
 	if (sg)
 	{
-		if (sg->isResearched(name))
+		if (sg->isResearched(name, false))
 		{
 			val = 1;
+			return;
 		}
 	}
 	val = 0;

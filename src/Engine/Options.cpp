@@ -82,8 +82,6 @@ void create()
 #endif
 	_info.push_back(OptionInfo("traceAI", &traceAI, false));
 	_info.push_back(OptionInfo("verboseLogging", &verboseLogging, false));
-	_info.push_back(OptionInfo("listVFSContents", &listVFSContents, false));
-	_info.push_back(OptionInfo("embeddedOnly", &embeddedOnly, true));
 	_info.push_back(OptionInfo("StereoSound", &StereoSound, true));
 	//_info.push_back(OptionInfo("baseXResolution", &baseXResolution, Screen::ORIGINAL_WIDTH));
 	//_info.push_back(OptionInfo("baseYResolution", &baseYResolution, Screen::ORIGINAL_HEIGHT));
@@ -99,9 +97,7 @@ void create()
 	_info.push_back(OptionInfo("useOpenGL", &useOpenGL, false));
 	_info.push_back(OptionInfo("checkOpenGLErrors", &checkOpenGLErrors, false));
 	_info.push_back(OptionInfo("useOpenGLShader", &useOpenGLShader, "Shaders/Raw.OpenGL.shader"));
-	//_info.push_back(OptionInfo("vSyncForOpenGL", &vSyncForOpenGL, true));
 	_info.push_back(OptionInfo("useOpenGLSmoothing", &useOpenGLSmoothing, true));
-	_info.push_back(OptionInfo("password", &password, "secret"));
 	_info.push_back(OptionInfo("debug", &debug, false));
 	_info.push_back(OptionInfo("debugUi", &debugUi, false));
 	_info.push_back(OptionInfo("soundVolume", &soundVolume, 2*(MIX_MAX_VOLUME/3)));
@@ -121,7 +117,7 @@ void create()
 	_info.push_back(OptionInfo("battleDragScrollButton", &battleDragScrollButton, 0));
 #endif
 	_info.push_back(OptionInfo("dragScrollTimeTolerance", &dragScrollTimeTolerance, 300)); // miliSecond
-	_info.push_back(OptionInfo("dragScrollPixelTolerance", &dragScrollPixelTolerance, 10)); // count of pixel
+	_info.push_back(OptionInfo("dragScrollPixelTolerance", &dragScrollPixelTolerance, 10)); // count of pixels
 	_info.push_back(OptionInfo("battleFireSpeed", &battleFireSpeed, 6));
 	_info.push_back(OptionInfo("battleXcomSpeed", &battleXcomSpeed, 30));
 	_info.push_back(OptionInfo("battleAlienSpeed", &battleAlienSpeed, 30));
@@ -170,25 +166,23 @@ void create()
 #else
 	_info.push_back(OptionInfo("touchEnabled", &touchEnabled, false));
 #endif
-	_info.push_back(OptionInfo("thumbButtons", &thumbButtons, false));
 	_info.push_back(OptionInfo("rootWindowedMode", &rootWindowedMode, false));
-	_info.push_back(OptionInfo("rawScreenShots", &rawScreenShots, false));
 	_info.push_back(OptionInfo("backgroundMute", &backgroundMute, false));
 	// SDL2 scaler options
 	_info.push_back(OptionInfo("useNearestScaler", &useNearestScaler, false));
 	_info.push_back(OptionInfo("useLinearScaler", &useLinearScaler, true));
 	_info.push_back(OptionInfo("useAnisotropicScaler", &useAnisotropicScaler, false));
 
-	// advanced option
+	// advanced options
 #ifdef _WIN32
 	_info.push_back(OptionInfo("oxceUpdateCheck", &oxceUpdateCheck, false, "STR_UPDATE_CHECK", "STR_GENERAL"));
 #endif
 	_info.push_back(OptionInfo("playIntro", &playIntro, true, "STR_PLAYINTRO", "STR_GENERAL"));
 	_info.push_back(OptionInfo("autosave", &autosave, true, "STR_AUTOSAVE", "STR_GENERAL"));
 	_info.push_back(OptionInfo("autosaveFrequency", &autosaveFrequency, 5, "STR_AUTOSAVE_FREQUENCY", "STR_GENERAL"));
-	_info.push_back(OptionInfo("autosaveSlots", &autosaveSlots, 1, "STR_AUTOSAVE_SLOTS", "STR_GENERAL"));
+	_info.push_back(OptionInfo("autosaveSlots", &autosaveSlots, 1, "STR_AUTOSAVE_SLOTS", "STR_GENERAL")); // OXCE only
 	_info.push_back(OptionInfo("newSeedOnLoad", &newSeedOnLoad, false, "STR_NEWSEEDONLOAD", "STR_GENERAL"));
-	_info.push_back(OptionInfo("lazyLoadResources", &lazyLoadResources, true, "STR_LAZY_LOADING", "STR_GENERAL"));
+	_info.push_back(OptionInfo("lazyLoadResources", &lazyLoadResources, true, "STR_LAZY_LOADING", "STR_GENERAL")); // exposed in OXCE
 	_info.push_back(OptionInfo("mousewheelSpeed", &mousewheelSpeed, 3, "STR_MOUSEWHEEL_SPEED", "STR_GENERAL"));
 	_info.push_back(OptionInfo("changeValueByMouseWheel", &changeValueByMouseWheel, 0, "STR_CHANGEVALUEBYMOUSEWHEEL", "STR_GENERAL"));
 	_info.push_back(OptionInfo("soldierDiaries", &soldierDiaries, true));
@@ -225,7 +219,7 @@ void create()
 	_info.push_back(OptionInfo("canTransferCraftsWhileAirborne", &canTransferCraftsWhileAirborne, false, "STR_CANTRANSFERCRAFTSWHILEAIRBORNE", "STR_GEOSCAPE")); // When the craft can reach the destination base with its fuel
 	_info.push_back(OptionInfo("retainCorpses", &retainCorpses, false, "STR_RETAINCORPSES", "STR_GEOSCAPE"));
 	_info.push_back(OptionInfo("fieldPromotions", &fieldPromotions, false, "STR_FIELDPROMOTIONS", "STR_GEOSCAPE"));
-	//_info.push_back(OptionInfo("meetingPoint", &meetingPoint, false, "STR_MEETINGPOINT", "STR_GEOSCAPE"));
+	//_info.push_back(OptionInfo("meetingPoint", &meetingPoint, false, "STR_MEETINGPOINT", "STR_GEOSCAPE")); // intentionally disabled in OXCE
 #ifdef __MOBILE__
 	_info.push_back(OptionInfo("dragSoldierReorder", &dragSoldierReorder, true, "STR_DRAGREORDER", "STR_GEOSCAPE"));
 #else
@@ -308,6 +302,14 @@ void create()
 	_info.push_back(OptionInfo("oxcePersonalLayoutIncludingArmor", &oxcePersonalLayoutIncludingArmor, true));
 	_info.push_back(OptionInfo("oxceManufactureFilterSuppliesOK", &oxceManufactureFilterSuppliesOK, false));
 
+	_info.push_back(OptionInfo("oxceEmbeddedOnly", &oxceEmbeddedOnly, true));
+	_info.push_back(OptionInfo("oxceListVFSContents", &oxceListVFSContents, false));
+	_info.push_back(OptionInfo("oxceRawScreenShots", &oxceRawScreenShots, false));
+	_info.push_back(OptionInfo("oxceThumbButtons", &oxceThumbButtons, true));
+
+	_info.push_back(OptionInfo("oxceRecommendedOptionsWereSet", &oxceRecommendedOptionsWereSet, false));
+	_info.push_back(OptionInfo("password", &password, "secret"));
+
 	// OXCE hidden but moddable
 	_info.push_back(OptionInfo("oxceStartUpTextMode", &oxceStartUpTextMode, 0, "", "HIDDEN"));
 	_info.push_back(OptionInfo("oxceManufactureScrollSpeed", &oxceManufactureScrollSpeed, 10, "", "HIDDEN"));
@@ -321,8 +323,6 @@ void create()
 	_info.push_back(OptionInfo("oxceDisableHitLog", &oxceDisableHitLog, false, "", "HIDDEN"));
 	_info.push_back(OptionInfo("oxceDisableAlienInventory", &oxceDisableAlienInventory, false, "", "HIDDEN"));
 	_info.push_back(OptionInfo("oxceDisableInventoryTuCost", &oxceDisableInventoryTuCost, false, "", "HIDDEN"));
-
-	_info.push_back(OptionInfo("oxceRecommendedOptionsWereSet", &oxceRecommendedOptionsWereSet, false));
 
 	// controls
 	_info.push_back(KeyOptionInfo("keyOk", &keyOk, SDLK_RETURN, "STR_OK", "STR_GENERAL"));
@@ -461,7 +461,7 @@ void create()
 #else
 	_info.push_back(OptionInfo("FPS", &FPS, 60, "STR_FPS_LIMIT", "STR_GENERAL"));
 	_info.push_back(OptionInfo("FPSInactive", &FPSInactive, 30, "STR_FPS_INACTIVE_LIMIT", "STR_GENERAL"));
-	_info.push_back(OptionInfo("vSyncForOpenGL", &vSyncForOpenGL, true, "STR_VSYNC_FOR_OPENGL", "STR_GENERAL"));
+	_info.push_back(OptionInfo("vSyncForOpenGL", &vSyncForOpenGL, true, "STR_VSYNC_FOR_OPENGL", "STR_GENERAL")); // exposed in OXCE
 #endif
 
 }
@@ -662,7 +662,7 @@ static void userSplitMasters()
 }
 
 /**
- * Handles the initialization of setting up default option
+ * Handles the initialization of setting up default options
  * and finding and loading any existing ones.
  * @param argc Number of arguments.
  * @param argv Array of argument strings.
@@ -717,7 +717,7 @@ bool init()
 	Log(LOG_INFO) << "Config folder is: " << _configFolder;
 	Log(LOG_INFO) << "Options loaded successfully.";
 
-	FileMap::clear(false, Options::embeddedOnly);
+	FileMap::clear(false, Options::oxceEmbeddedOnly);
 	return true;
 }
 
@@ -735,8 +735,8 @@ void refreshMods()
 		Log(LOG_INFO) << "Scanning embedded standard mods...";
 		FileMap::scanModZipRW(rwops, "exe:standard.zip");
 	}
-	if (embeddedOnly && rwops) {
-		Log(LOG_INFO) << "Modding embedded resources is disabled, set 'embeddedOnly: false' in options.cfg to enable.";
+	if (Options::oxceEmbeddedOnly && rwops) {
+		Log(LOG_INFO) << "Modding embedded resources is disabled, set 'oxceEmbeddedOnly: false' in options.cfg to enable.";
 	} else {
 		Log(LOG_INFO) << "Scanning standard mods in '" << getDataFolder() << "'...";
 		FileMap::scanModDir(getDataFolder(), "standard", true);
@@ -893,10 +893,10 @@ void refreshMods()
 void updateMods()
 {
 	// pick up stuff in common before-hand
-	FileMap::clear(false, embeddedOnly);
+	FileMap::clear(false, Options::oxceEmbeddedOnly);
 
 	refreshMods();
-	FileMap::setup(getActiveMods(), embeddedOnly);
+	FileMap::setup(getActiveMods(), Options::oxceEmbeddedOnly);
 	userSplitMasters();
 
 	// report active mods that don't meet the minimum OXCE requirements
@@ -950,7 +950,7 @@ void expendLoadLastSave()
 }
 
 /**
- * Sets up the game's Data folder where the data file
+ * Sets up the game's Data folder where the data files
  * are loaded from and the User folder and Config
  * folder where settings and saves are stored in.
  */
@@ -981,7 +981,7 @@ void setFolders()
 			}
 		}
 
-		// Set up folder
+		// Set up folders
 		if (_userFolder.empty())
 		{
 			for (std::vector<std::string>::iterator i = user.begin(); i != user.end(); ++i)
@@ -1012,14 +1012,14 @@ void setFolders()
  */
 void updateOptions()
 {
-	// Load existing option
+	// Load existing options
 	if (CrossPlatform::folderExists(_configFolder))
 	{
 		if (CrossPlatform::fileExists(_configFolder + "options.cfg"))
 		{
 			load();
 #ifndef EMBED_ASSETS
-			Options::embeddedOnly = false;
+			Options::oxceEmbeddedOnly = false;
 #endif
 		}
 		else
@@ -1027,7 +1027,7 @@ void updateOptions()
 			save();
 		}
 	}
-	// Create config folder and save option
+	// Create config folder and save options
 	else
 	{
 		CrossPlatform::createFolder(_configFolder);
@@ -1053,7 +1053,7 @@ bool load(const std::string &filename)
 	try
 	{
 		YAML::Node doc = YAML::Load(*CrossPlatform::readFile(s));
-		// Ignore old options file
+		// Ignore old options files
 		if (doc["options"]["NewBattleMission"])
 		{
 			return false;
@@ -1173,7 +1173,7 @@ bool save(const std::string &filename)
 }
 
 /**
- * Returns the game's current Data folder where resource
+ * Returns the game's current Data folder where resources
  * and X-Com files are loaded from.
  * @return Full path to Data folder.
  */
@@ -1183,7 +1183,7 @@ std::string getDataFolder()
 }
 
 /**
- * Changes the game's current Data folder where resource
+ * Changes the game's current Data folder where resources
  * and X-Com files are loaded from.
  * @param folder Full path to Data folder.
  */
