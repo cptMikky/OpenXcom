@@ -569,8 +569,8 @@ void ManufactureInfoState::onLessEngineer()
  */
 void ManufactureInfoState::handleWheelEngineer(Action *action)
 {
-	if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP) moreEngineer(Options::changeValueByMouseWheel);
-	else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN) lessEngineer(Options::changeValueByMouseWheel);
+	//if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP) moreEngineer(Options::changeValueByMouseWheel);
+	//else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN) lessEngineer(Options::changeValueByMouseWheel);
 }
 
 /**
@@ -597,8 +597,8 @@ void ManufactureInfoState::onLessUnit()
  */
 void ManufactureInfoState::handleWheelUnit(Action *action)
 {
-	if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP) moreUnit(Options::changeValueByMouseWheel);
-	else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN) lessUnit(Options::changeValueByMouseWheel);
+	//if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP) moreUnit(Options::changeValueByMouseWheel);
+	//else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN) lessUnit(Options::changeValueByMouseWheel);
 }
 
 /**

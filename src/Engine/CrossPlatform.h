@@ -88,11 +88,11 @@ namespace CrossPlatform
 	/// Move/rename a file between paths.
 	bool moveFile(const std::string &src, const std::string &dest);
 	/// Flashes the game window.
-	void flashWindow();
+	void flashWindow(SDL_Window *winPtr);
 	/// Gets the DOS-style executable path.
 	std::string getDosPath();
 	/// Sets the window icon.
-	void setWindowIcon(int winResource, const std::string &unixPath);
+	void setWindowIcon(int winResource, const std::string &unixPath, SDL_Window *winPtr);
 	/// Produces a stack trace.
 	void stackTrace(void *ctx);
 	/// Produces a quick timestamp.

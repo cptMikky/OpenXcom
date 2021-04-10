@@ -338,6 +338,7 @@ void ManageAlienContainmentState::lstItemsLeftArrowClick(Action *action)
 void ManageAlienContainmentState::lstItemsMousePress(Action *action)
 {
 	_sel = _lstAliens->getSelectedRow();
+#if 0
 	if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP)
 	{
 		_timerInc->stop();
@@ -358,6 +359,7 @@ void ManageAlienContainmentState::lstItemsMousePress(Action *action)
 			decreaseByValue(Options::changeValueByMouseWheel);
 		}
 	}
+#endif
 }
 
 /**

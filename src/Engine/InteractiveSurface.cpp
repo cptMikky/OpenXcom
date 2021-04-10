@@ -22,7 +22,7 @@
 namespace OpenXcom
 {
 
-const SDLKey InteractiveSurface::SDLK_ANY = (SDLKey)-1; // using an unused keycode to represent an "any key"
+const SDL_Keycode InteractiveSurface::SDLK_ANY = (SDL_Keycode)-1; // using an unused keycode to represent an "any key"
 
 /**
  * Sets up a blank interactive surface with the specified size and position.
@@ -196,6 +196,10 @@ void InteractiveSurface::handle(Action *action, State *state)
 		{
 			keyboardRelease(action, state);
 		}
+		else if (action->getDetails()->type == SDL_TEXTINPUT)
+		{
+			textInput(action, state);
+		}
 	}
 }
 
@@ -360,8 +364,8 @@ void InteractiveSurface::mouseOut(Action *action, State *state)
  */
 void InteractiveSurface::keyboardPress(Action *action, State *state)
 {
-	std::map<SDLKey, ActionHandler>::iterator allHandler = _keyPress.find(SDLK_ANY);
-	std::map<SDLKey, ActionHandler>::iterator oneHandler = _keyPress.find(action->getDetails()->key.keysym.sym);
+	std::map<SDL_Keycode, ActionHandler>::iterator allHandler = _keyPress.find(SDLK_ANY);
+	std::map<SDL_Keycode, ActionHandler>::iterator oneHandler = _keyPress.find(action->getDetails()->key.keysym.sym);
 	if (allHandler != _keyPress.end())
 	{
 		ActionHandler handler = allHandler->second;
@@ -385,8 +389,8 @@ void InteractiveSurface::keyboardPress(Action *action, State *state)
  */
 void InteractiveSurface::keyboardRelease(Action *action, State *state)
 {
-	std::map<SDLKey, ActionHandler>::iterator allHandler = _keyRelease.find(SDLK_ANY);
-	std::map<SDLKey, ActionHandler>::iterator oneHandler = _keyRelease.find(action->getDetails()->key.keysym.sym);
+	std::map<SDL_Keycode, ActionHandler>::iterator allHandler = _keyRelease.find(SDLK_ANY);
+	std::map<SDL_Keycode, ActionHandler>::iterator oneHandler = _keyRelease.find(action->getDetails()->key.keysym.sym);
 	if (allHandler != _keyRelease.end())
 	{
 		ActionHandler handler = allHandler->second;
@@ -484,7 +488,7 @@ void InteractiveSurface::onMouseOut(ActionHandler handler)
  * @param handler Action handler.
  * @param key Keyboard button to check for (note: ignores key modifiers). Set to SDLK_ANY for any key.
  */
-void InteractiveSurface::onKeyboardPress(ActionHandler handler, SDLKey key)
+void InteractiveSurface::onKeyboardPress(ActionHandler handler, SDL_Keycode key)
 {
 	if (key == SDLK_UNKNOWN)
 	{
@@ -506,7 +510,7 @@ void InteractiveSurface::onKeyboardPress(ActionHandler handler, SDLKey key)
  * @param handler Action handler.
  * @param key Keyboard button to check for (note: ignores key modifiers). Set to SDLK_ANY for any key.
  */
-void InteractiveSurface::onKeyboardRelease(ActionHandler handler, SDLKey key)
+void InteractiveSurface::onKeyboardRelease(ActionHandler handler, SDL_Keycode key)
 {
 	if (key == SDLK_UNKNOWN)
 	{
@@ -521,6 +525,11 @@ void InteractiveSurface::onKeyboardRelease(ActionHandler handler, SDLKey key)
 	{
 		_keyRelease.erase(key);
 	}
+}
+
+void InteractiveSurface::textInput(Action *action, State *state)
+{
+	//TODO: do nothing?
 }
 
 /**

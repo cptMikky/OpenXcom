@@ -292,11 +292,13 @@ void TextButton::mousePress(Action *action, State *state)
 
 	if (isButtonHandled(action->getDetails()->button.button))
 	{
+#if 0
 		if (soundPress != 0 && _group == 0 &&
 			action->getDetails()->button.button != SDL_BUTTON_WHEELUP && action->getDetails()->button.button != SDL_BUTTON_WHEELDOWN)
 		{
 			soundPress->play(Mix_GroupAvailable(0));
 		}
+#endif
 
 		if (_comboBox)
 		{

@@ -325,6 +325,7 @@ void CraftEquipmentState::lstEquipmentRightArrowClick(Action *action)
 void CraftEquipmentState::lstEquipmentMousePress(Action *action)
 {
 	_sel = _lstEquipment->getSelectedRow();
+#if 0
 	if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP)
 	{
 		_timerRight->stop();
@@ -345,6 +346,7 @@ void CraftEquipmentState::lstEquipmentMousePress(Action *action)
 			moveLeftByValue(Options::changeValueByMouseWheel);
 		}
 	}
+#endif
 }
 
 /**

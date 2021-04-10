@@ -103,6 +103,7 @@ public:
 	void keyboardPress(Action *action, State *state) override;
 	/// Hooks an action handler to when the slider changes.
 	void onChange(ActionHandler handler);
+	void textInput(Action *action, State *state) override;
 };
 
 }

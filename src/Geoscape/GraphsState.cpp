@@ -57,8 +57,8 @@ GraphsState::GraphsState() : _butRegionsOffset(0), _butCountriesOffset(0)
 {
 	// Create objects
 	_bg = new InteractiveSurface(320, 200, 0, 0);
-	_bg->onMousePress((ActionHandler)&GraphsState::shiftButtons, SDL_BUTTON_WHEELUP);
-	_bg->onMousePress((ActionHandler)&GraphsState::shiftButtons, SDL_BUTTON_WHEELDOWN);
+	//_bg->onMousePress((ActionHandler)&GraphsState::shiftButtons, SDL_BUTTON_WHEELUP);
+	//_bg->onMousePress((ActionHandler)&GraphsState::shiftButtons, SDL_BUTTON_WHEELDOWN);
 	_btnUfoRegion = new InteractiveSurface(32, 24, 96, 0);
 	_btnUfoCountry = new InteractiveSurface(32, 24, 128, 0);
 	_btnXcomRegion = new InteractiveSurface(32, 24, 160, 0);
@@ -1127,20 +1127,20 @@ void GraphsState::shiftButtons(Action *action)
 		// too few countries? - return
 		if (_countryToggles.size() <= GRAPH_MAX_BUTTONS)
 			return;
-		else if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP)
-			scrollButtons(_countryToggles, _btnCountries, _butCountriesOffset, -1);
-		else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN)
-			scrollButtons(_countryToggles, _btnCountries, _butCountriesOffset, 1);
+		//else if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP)
+		//	scrollButtons(_countryToggles, _btnCountries, _butCountriesOffset, -1);
+		//else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN)
+		//	scrollButtons(_countryToggles, _btnCountries, _butCountriesOffset, 1);
 	}
 	else
 	{
 		// too few regions? - return
 		if (_regionToggles.size() <= GRAPH_MAX_BUTTONS)
 			return;
-		else if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP)
-			scrollButtons(_regionToggles, _btnRegions, _butRegionsOffset, -1);
-		else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN)
-			scrollButtons(_regionToggles, _btnRegions, _butRegionsOffset, 1);
+		//else if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP)
+		//	scrollButtons(_regionToggles, _btnRegions, _butRegionsOffset, -1);
+		//else if (action->getDetails()->button.button == SDL_BUTTON_WHEELDOWN)
+		//	scrollButtons(_regionToggles, _btnRegions, _butRegionsOffset, 1);
 	}
 }
 

@@ -19,13 +19,15 @@
  */
 #include <SDL.h>
 #include <string>
-#include "OpenGL.h"
+#include <vector>
 
 namespace OpenXcom
 {
 
 class Surface;
 class Action;
+
+class Renderer;
 
 /**
  * A display screen, handles rendering onto the game window.
@@ -38,7 +40,8 @@ class Action;
 class Screen
 {
 private:
-	SDL_Surface *_screen;
+	SDL_Window *_window;
+	Renderer *_renderer;
 	int _bpp;
 	int _baseWidth, _baseHeight;
 	double _scaleX, _scaleY;
@@ -47,11 +50,12 @@ private:
 	SDL_Color deferredPalette[256];
 	int _numColors, _firstColor;
 	bool _pushPalette;
-	OpenGL glOutput;
 	Surface *_surface;
-	SDL_Rect _clear;
 	/// Sets the _flags and _bpp variables based on game options; needed in more than one place now
 	void makeVideoFlags();
+	SDL_Texture *_texture;
+	int _prevWidth, _prevHeight;
+
 public:
 	static const int ORIGINAL_WIDTH;
 	static const int ORIGINAL_HEIGHT;
@@ -98,6 +102,8 @@ public:
 	static bool useOpenGL();
 	/// update the game scale as required.
 	static void updateScale(int type, int &width, int &height, bool change);
+	/// Get the pointer for our current window
+	SDL_Window *getWindow() const;
 };
 
 }

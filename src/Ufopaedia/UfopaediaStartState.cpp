@@ -74,8 +74,8 @@ namespace OpenXcom
 			add(button, "button1", "ufopaedia");
 
 			button->onMouseClick((ActionHandler)&UfopaediaStartState::btnSectionClick);
-			button->onMousePress((ActionHandler)&UfopaediaStartState::btnScrollUpClick, SDL_BUTTON_WHEELUP);
-			button->onMousePress((ActionHandler)&UfopaediaStartState::btnScrollDownClick, SDL_BUTTON_WHEELDOWN);
+			//button->onMousePress((ActionHandler)&UfopaediaStartState::btnScrollUpClick, SDL_BUTTON_WHEELUP);
+			//button->onMousePress((ActionHandler)&UfopaediaStartState::btnScrollDownClick, SDL_BUTTON_WHEELDOWN);
 
 			_btnSections.push_back(button);
 		}

@@ -358,7 +358,7 @@ void CraftSoldiersState::moveSoldierUp(Action *action, unsigned int row, bool ma
 		_base->getSoldiers()->at(row - 1) = s;
 		if (row != _lstSoldiers->getScroll())
 		{
-			SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() - static_cast<Uint16>(8 * action->getYScale()));
+			//SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() - static_cast<Uint16>(8 * action->getYScale()));
 		}
 		else
 		{
@@ -411,7 +411,7 @@ void CraftSoldiersState::moveSoldierDown(Action *action, unsigned int row, bool 
 		_base->getSoldiers()->at(row + 1) = s;
 		if (row != _lstSoldiers->getVisibleRows() - 1 + _lstSoldiers->getScroll())
 		{
-			SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() + static_cast<Uint16>(8 * action->getYScale()));
+			//SDL_WarpMouse(action->getLeftBlackBand() + action->getXMouse(), action->getTopBlackBand() + action->getYMouse() + static_cast<Uint16>(8 * action->getYScale()));
 		}
 		else
 		{
@@ -474,6 +474,7 @@ void CraftSoldiersState::lstSoldiersMousePress(Action *action)
 		return;
 	unsigned int row = _lstSoldiers->getSelectedRow();
 	size_t numSoldiers = _base->getSoldiers()->size();
+#if 0
 	if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP &&
 		row > 0)
 	{
@@ -492,6 +493,7 @@ void CraftSoldiersState::lstSoldiersMousePress(Action *action)
 			moveSoldierDown(action, row);
 		}
 	}
+#endif
 }
 
 }

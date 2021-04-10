@@ -201,6 +201,7 @@ void ScrollBar::mousePress(Action *action, State *state)
 		}
 		_pressed = true;
 	}
+#if 0
 	else if (action->getDetails()->button.button == SDL_BUTTON_WHEELUP)
 	{
 		_list->scrollUp(false, true);
@@ -209,6 +210,7 @@ void ScrollBar::mousePress(Action *action, State *state)
 	{
 		_list->scrollDown(false, true);
 	}
+#endif
 }
 
 /**

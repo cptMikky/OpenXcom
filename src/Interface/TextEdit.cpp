@@ -53,7 +53,9 @@ TextEdit::~TextEdit()
 	delete _caret;
 	delete _timer;
 	// In case it was left focused
+#if 0
 	SDL_EnableKeyRepeat(0, SDL_DEFAULT_REPEAT_INTERVAL);
+#endif
 	_state->setModal(0);
 }
 
@@ -88,7 +90,9 @@ void TextEdit::setFocus(bool focus, bool modal)
 		InteractiveSurface::setFocus(focus);
 		if (_isFocused)
 		{
+#if 0
 			SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+#endif
 			_caretPos = _value.length();
 			_blink = true;
 			_timer->start();
@@ -99,7 +103,9 @@ void TextEdit::setFocus(bool focus, bool modal)
 		{
 			_blink = false;
 			_timer->stop();
+#if 0
 			SDL_EnableKeyRepeat(0, SDL_DEFAULT_REPEAT_INTERVAL);
+#endif
 			if (_modal)
 				_state->setModal(0);
 		}
@@ -532,12 +538,7 @@ void TextEdit::keyboardPress(Action *action, State *state)
 			}
 			break;
 		default:
-			UCode c = action->getDetails()->key.keysym.unicode;
-			if (isValidChar(c) && !exceedsMaxWidth(c))
-			{
-				_value.insert(_caretPos, 1, c);
-				_caretPos++;
-			}
+			// Letter keys are handled in textInput
 			break;
 		}
 	}
@@ -557,6 +558,33 @@ void TextEdit::keyboardPress(Action *action, State *state)
 void TextEdit::onChange(ActionHandler handler)
 {
 	_change = handler;
+}
+
+void TextEdit::textInput(Action* action, State* state)
+{
+	// FIXME: This might not be consistent with current changes
+	std::string text(action->getDetails()->text.text);
+	UString wText = Unicode::convUtf8ToUtf32(text);
+	bool correct = true;
+	for (UString::iterator it = wText.begin(); it != wText.end(); ++it)
+	{
+		// FIXME: Probably not the correct check (text might be quite long?)
+		if (!isValidChar(*it) || exceedsMaxWidth(*it))
+		{
+			correct = false;
+			break;
+		}
+	}
+	if (correct)
+	{
+		_value += wText;
+		_caretPos = _value.length();
+	}
+	_redraw = true;
+	if (_change)
+	{
+		(state->*_change)(action);
+	}
 }
 
 }

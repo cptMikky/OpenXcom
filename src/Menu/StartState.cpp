@@ -112,7 +112,8 @@ StartState::~StartState()
 {
 	if (_thread != 0)
 	{
-		SDL_KillThread(_thread);
+		int status;
+		SDL_WaitThread(_thread, &status);
 	}
 	delete _font;
 	delete _timer;
@@ -136,7 +137,7 @@ void StartState::init()
 	}
 
 	// Load the game data in a separate thread
-	_thread = SDL_CreateThread(load, (void*)_game);
+	_thread = SDL_CreateThread(load, "load_data", (void*)_game);
 	if (_thread == 0)
 	{
 		// If we can't create the thread, just load it as usual
@@ -155,7 +156,7 @@ void StartState::think()
 	switch (loading)
 	{
 	case LOADING_FAILED:
-		CrossPlatform::flashWindow();
+		CrossPlatform::flashWindow(_game->getScreen()->getWindow());
 		addLine("");
 		addLine("ERROR: " + error);
 		addLine("");
@@ -166,7 +167,7 @@ void StartState::think()
 		loading = LOADING_DONE;
 		break;
 	case LOADING_SUCCESSFUL:
-		CrossPlatform::flashWindow();
+		CrossPlatform::flashWindow(_game->getScreen()->getWindow());
 		Log(LOG_INFO) << "OpenXcom started successfully!";
 		_game->setState(new GoToMainMenuState);
 		if (_oldMaster != Options::getActiveMaster() && Options::playIntro)

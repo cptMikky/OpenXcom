@@ -78,6 +78,7 @@ OptionsVideoState::OptionsVideoState(OptionsOrigin origin) : OptionsBaseState(or
 	_btnRootWindowedMode = new ToggleTextButton(104, 16, 206, 128);
 
 	// Get available fullscreen modes
+#if 0
 	_res = SDL_ListModes(NULL, SDL_FULLSCREEN);
 	if (_res != (SDL_Rect**)-1 && _res != (SDL_Rect**)0)
 	{
@@ -94,6 +95,7 @@ OptionsVideoState::OptionsVideoState(OptionsOrigin origin) : OptionsBaseState(or
 		_resAmount = i;
 	}
 	else
+#endif
 	{
 		_resCurrent = -1;
 		_resAmount = 0;
@@ -174,7 +176,7 @@ OptionsVideoState::OptionsVideoState(OptionsOrigin origin) : OptionsBaseState(or
 	_btnLetterbox->onMouseOut((ActionHandler)&OptionsVideoState::txtTooltipOut);
 
 	_btnLockMouse->setText(tr("STR_LOCK_MOUSE"));
-	_btnLockMouse->setPressed(Options::captureMouse == SDL_GRAB_ON);
+	_btnLockMouse->setPressed(Options::captureMouse);
 	_btnLockMouse->onMouseClick((ActionHandler)&OptionsVideoState::btnLockMouseClick);
 	_btnLockMouse->setTooltip("STR_LOCK_MOUSE_DESC");
 	_btnLockMouse->onMouseIn((ActionHandler)&OptionsVideoState::txtTooltipIn);
@@ -555,8 +557,10 @@ void OptionsVideoState::btnLetterboxClick(Action *)
  */
 void OptionsVideoState::btnLockMouseClick(Action *)
 {
+#if 0
 	Options::captureMouse = (SDL_GrabMode)_btnLockMouse->getPressed();
 	SDL_WM_GrabInput(Options::captureMouse);
+#endif
 }
 
 /**
@@ -618,7 +622,7 @@ void OptionsVideoState::handle(Action *action)
 	State::handle(action);
 	if (action->getDetails()->type == SDL_KEYDOWN && action->getDetails()->key.keysym.sym == SDLK_g && (SDL_GetModState() & KMOD_CTRL) != 0)
 	{
-		_btnLockMouse->setPressed(Options::captureMouse == SDL_GRAB_ON);
+		_btnLockMouse->setPressed(Options::captureMouse);
 	}
 }
 
