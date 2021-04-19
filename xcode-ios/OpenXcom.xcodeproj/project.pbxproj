@@ -58,7 +58,6 @@
 		5BD0BB1C2242E079008E6DFB /* AllocateTrainingState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB102242E079008E6DFB /* AllocateTrainingState.cpp */; };
 		5BD0BB1D2242E079008E6DFB /* TrainingFinishedState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB122242E079008E6DFB /* TrainingFinishedState.cpp */; };
 		5BD0BB1E2242E079008E6DFB /* UfoTrackerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB132242E079008E6DFB /* UfoTrackerState.cpp */; };
-		5BD0BB252242E099008E6DFB /* OptionsInformExtendedState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB202242E099008E6DFB /* OptionsInformExtendedState.cpp */; };
 		5BD0BB262242E099008E6DFB /* TestPaletteState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB222242E099008E6DFB /* TestPaletteState.cpp */; };
 		5BD0BB352242E0C1008E6DFB /* RuleDamageType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB282242E0BE008E6DFB /* RuleDamageType.cpp */; };
 		5BD0BB362242E0C1008E6DFB /* RuleStartingCondition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB2C2242E0BF008E6DFB /* RuleStartingCondition.cpp */; };
@@ -70,6 +69,8 @@
 		5BD0BB402242E0F0008E6DFB /* StatsForNerdsState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD0BB3E2242E0EF008E6DFB /* StatsForNerdsState.cpp */; };
 		5BD535AB2461B53C0041673F /* InventoryPersonalState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD5359F2461B53B0041673F /* InventoryPersonalState.cpp */; };
 		5BD535AE2461B54C0041673F /* DogfightExperienceState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BD535AC2461B54B0041673F /* DogfightExperienceState.cpp */; };
+		5BF12464262E0D8500A20BF1 /* ModConfirmExtendedState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BF12461262E0D8500A20BF1 /* ModConfirmExtendedState.cpp */; };
+		5BF12465262E0D8500A20BF1 /* ModListState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BF12463262E0D8500A20BF1 /* ModListState.cpp */; };
 		B235EF4A201C4DF200FF7AC3 /* iOS Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA86C0361D9765BA009CB637 /* iOS Launch Screen.storyboard */; };
 		B235EF51201C4DF200FF7AC3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FABA34D31D8B5E5600915323 /* AVFoundation.framework */; };
 		B235EF52201C4DF200FF7AC3 /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE0E9691BAF96A00098DFA4 /* GameController.framework */; };
@@ -111,7 +112,6 @@
 		B2834477201F6D9D00BAEC9D /* StatisticsState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2834201201F6D9B00BAEC9D /* StatisticsState.cpp */; };
 		B2834478201F6D9D00BAEC9D /* ConfirmLoadState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2834203201F6D9B00BAEC9D /* ConfirmLoadState.cpp */; };
 		B2834479201F6D9D00BAEC9D /* OptionsBattlescapeState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2834205201F6D9B00BAEC9D /* OptionsBattlescapeState.cpp */; };
-		B283447A201F6D9D00BAEC9D /* OptionsModsState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2834206201F6D9B00BAEC9D /* OptionsModsState.cpp */; };
 		B283447B201F6D9D00BAEC9D /* CutsceneState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2834207201F6D9B00BAEC9D /* CutsceneState.cpp */; };
 		B283447C201F6D9D00BAEC9D /* ListSaveState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2834208201F6D9B00BAEC9D /* ListSaveState.cpp */; };
 		B283447D201F6D9D00BAEC9D /* OptionsControlsState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2834209201F6D9B00BAEC9D /* OptionsControlsState.cpp */; };
@@ -612,8 +612,6 @@
 		5BD0BB132242E079008E6DFB /* UfoTrackerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UfoTrackerState.cpp; sourceTree = "<group>"; };
 		5BD0BB142242E079008E6DFB /* TrainingFinishedState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrainingFinishedState.h; sourceTree = "<group>"; };
 		5BD0BB152242E079008E6DFB /* TrainingState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrainingState.h; sourceTree = "<group>"; };
-		5BD0BB202242E099008E6DFB /* OptionsInformExtendedState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionsInformExtendedState.cpp; sourceTree = "<group>"; };
-		5BD0BB212242E099008E6DFB /* OptionsInformExtendedState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsInformExtendedState.h; sourceTree = "<group>"; };
 		5BD0BB222242E099008E6DFB /* TestPaletteState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestPaletteState.cpp; sourceTree = "<group>"; };
 		5BD0BB242242E099008E6DFB /* TestPaletteState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestPaletteState.h; sourceTree = "<group>"; };
 		5BD0BB282242E0BE008E6DFB /* RuleDamageType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RuleDamageType.cpp; sourceTree = "<group>"; };
@@ -638,6 +636,10 @@
 		5BD535AC2461B54B0041673F /* DogfightExperienceState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DogfightExperienceState.cpp; sourceTree = "<group>"; };
 		5BD535AD2461B54C0041673F /* DogfightExperienceState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DogfightExperienceState.h; sourceTree = "<group>"; };
 		5BD535AF2461B5590041673F /* RuleBaseFacilityFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RuleBaseFacilityFunctions.h; sourceTree = "<group>"; };
+		5BF12460262E0D8500A20BF1 /* ModConfirmExtendedState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModConfirmExtendedState.h; sourceTree = "<group>"; };
+		5BF12461262E0D8500A20BF1 /* ModConfirmExtendedState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModConfirmExtendedState.cpp; sourceTree = "<group>"; };
+		5BF12462262E0D8500A20BF1 /* ModListState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModListState.h; sourceTree = "<group>"; };
+		5BF12463262E0D8500A20BF1 /* ModListState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModListState.cpp; sourceTree = "<group>"; };
 		5BF48A3624F16E47003E3156 /* Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functions.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B235EF5E201C4DF200FF7AC3 /* Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Game.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -658,7 +660,6 @@
 		B28341DB201F6D9B00BAEC9D /* OptionsAdvancedState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsAdvancedState.h; sourceTree = "<group>"; };
 		B28341DC201F6D9B00BAEC9D /* DeleteGameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeleteGameState.cpp; sourceTree = "<group>"; };
 		B28341DD201F6D9B00BAEC9D /* OptionsBaseState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsBaseState.h; sourceTree = "<group>"; };
-		B28341DE201F6D9B00BAEC9D /* OptionsModsState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsModsState.h; sourceTree = "<group>"; };
 		B28341DF201F6D9B00BAEC9D /* SaveGameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SaveGameState.cpp; sourceTree = "<group>"; };
 		B28341E0201F6D9B00BAEC9D /* NewBattleState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewBattleState.h; sourceTree = "<group>"; };
 		B28341E1201F6D9B00BAEC9D /* ConfirmLoadState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfirmLoadState.h; sourceTree = "<group>"; };
@@ -698,7 +699,6 @@
 		B2834203201F6D9B00BAEC9D /* ConfirmLoadState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConfirmLoadState.cpp; sourceTree = "<group>"; };
 		B2834204201F6D9B00BAEC9D /* ListGamesState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListGamesState.h; sourceTree = "<group>"; };
 		B2834205201F6D9B00BAEC9D /* OptionsBattlescapeState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionsBattlescapeState.cpp; sourceTree = "<group>"; };
-		B2834206201F6D9B00BAEC9D /* OptionsModsState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionsModsState.cpp; sourceTree = "<group>"; };
 		B2834207201F6D9B00BAEC9D /* CutsceneState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CutsceneState.cpp; sourceTree = "<group>"; };
 		B2834208201F6D9B00BAEC9D /* ListSaveState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ListSaveState.cpp; sourceTree = "<group>"; };
 		B2834209201F6D9B00BAEC9D /* OptionsControlsState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OptionsControlsState.cpp; sourceTree = "<group>"; };
@@ -1440,19 +1440,20 @@
 		B28341D9201F6D9B00BAEC9D /* Menu */ = {
 			isa = PBXGroup;
 			children = (
+				5BF12461262E0D8500A20BF1 /* ModConfirmExtendedState.cpp */,
+				5BF12460262E0D8500A20BF1 /* ModConfirmExtendedState.h */,
+				5BF12463262E0D8500A20BF1 /* ModListState.cpp */,
+				5BF12462262E0D8500A20BF1 /* ModListState.h */,
 				5B328451255B1B13002C2AC1 /* NotesState.cpp */,
 				5B32845C255B1B13002C2AC1 /* NotesState.h */,
 				5B5F68012391B9A000D2D740 /* OptionsFoldersState.cpp */,
 				5B5F680C2391B9A000D2D740 /* OptionsFoldersState.h */,
-				5BD0BB202242E099008E6DFB /* OptionsInformExtendedState.cpp */,
-				5BD0BB212242E099008E6DFB /* OptionsInformExtendedState.h */,
 				5BD0BB222242E099008E6DFB /* TestPaletteState.cpp */,
 				5BD0BB242242E099008E6DFB /* TestPaletteState.h */,
 				B28341DA201F6D9B00BAEC9D /* ErrorMessageState.cpp */,
 				B28341DB201F6D9B00BAEC9D /* OptionsAdvancedState.h */,
 				B28341DC201F6D9B00BAEC9D /* DeleteGameState.cpp */,
 				B28341DD201F6D9B00BAEC9D /* OptionsBaseState.h */,
-				B28341DE201F6D9B00BAEC9D /* OptionsModsState.h */,
 				B28341DF201F6D9B00BAEC9D /* SaveGameState.cpp */,
 				B28341E0201F6D9B00BAEC9D /* NewBattleState.h */,
 				B28341E1201F6D9B00BAEC9D /* ConfirmLoadState.h */,
@@ -1492,7 +1493,6 @@
 				B2834203201F6D9B00BAEC9D /* ConfirmLoadState.cpp */,
 				B2834204201F6D9B00BAEC9D /* ListGamesState.h */,
 				B2834205201F6D9B00BAEC9D /* OptionsBattlescapeState.cpp */,
-				B2834206201F6D9B00BAEC9D /* OptionsModsState.cpp */,
 				B2834207201F6D9B00BAEC9D /* CutsceneState.cpp */,
 				B2834208201F6D9B00BAEC9D /* ListSaveState.cpp */,
 				B2834209201F6D9B00BAEC9D /* OptionsControlsState.cpp */,
@@ -2515,7 +2515,6 @@
 				B2834590201F6D9E00BAEC9D /* City.cpp in Sources */,
 				B2834513201F6D9E00BAEC9D /* Map.cpp in Sources */,
 				B283454B201F6D9E00BAEC9D /* Slider.cpp in Sources */,
-				B283447A201F6D9D00BAEC9D /* OptionsModsState.cpp in Sources */,
 				B2834549201F6D9E00BAEC9D /* Cursor.cpp in Sources */,
 				5BD0BADD2242E009008E6DFB /* CraftEquipmentSaveState.cpp in Sources */,
 				B28344CA201F6D9E00BAEC9D /* FileMap.cpp in Sources */,
@@ -2566,6 +2565,7 @@
 				B283453E201F6D9E00BAEC9D /* Text.cpp in Sources */,
 				B2834566201F6D9E00BAEC9D /* SelectStartFacilityState.cpp in Sources */,
 				5BD0BADB2242E009008E6DFB /* SoldierSortUtil.cpp in Sources */,
+				5BF12464262E0D8500A20BF1 /* ModConfirmExtendedState.cpp in Sources */,
 				5BD535AE2461B54C0041673F /* DogfightExperienceState.cpp in Sources */,
 				B28344F1201F6D9E00BAEC9D /* EquipmentLayoutItem.cpp in Sources */,
 				5BD0BAF02242E02A008E6DFB /* InventoryLoadState.cpp in Sources */,
@@ -2735,7 +2735,6 @@
 				B283446E201F6D9D00BAEC9D /* SlideshowState.cpp in Sources */,
 				B2834478201F6D9D00BAEC9D /* ConfirmLoadState.cpp in Sources */,
 				5BD0BADF2242E009008E6DFB /* CraftPilotsState.cpp in Sources */,
-				5BD0BB252242E099008E6DFB /* OptionsInformExtendedState.cpp in Sources */,
 				B28344A9201F6D9E00BAEC9D /* LocalizedText.cpp in Sources */,
 				B28344D2201F6D9E00BAEC9D /* Game.cpp in Sources */,
 				B28344E0201F6D9E00BAEC9D /* AlienStrategy.cpp in Sources */,
@@ -2784,6 +2783,7 @@
 				B283455C201F6D9E00BAEC9D /* CraftSoldiersState.cpp in Sources */,
 				5BD0BB392242E0C1008E6DFB /* CustomPalettes.cpp in Sources */,
 				5BD0BAF52242E02A008E6DFB /* AlienInventory.cpp in Sources */,
+				5BF12465262E0D8500A20BF1 /* ModListState.cpp in Sources */,
 				B28344F8201F6D9E00BAEC9D /* UnitInfoState.cpp in Sources */,
 				B2834550201F6D9E00BAEC9D /* PurchaseState.cpp in Sources */,
 				5BD0BAD92242E009008E6DFB /* ManufactureDependenciesTreeState.cpp in Sources */,
