@@ -1712,6 +1712,26 @@ void crashDump(void *ex, const std::string &err)
 	showError(msg.str());
 }
 
+/**
+ * Opens a file or web path in the system default browser.
+ */
+bool openExplorer(const std::string &url)
+{
+#ifdef _WIN32
+	auto operationW = pathToWindows("open", false);
+	auto urlW = pathToWindows(url, false);
+	HINSTANCE ret = ShellExecuteW(NULL, operationW.c_str(), urlW.c_str(), NULL, NULL, SW_SHOWNORMAL);
+	// The return value is not a true HINSTANCE. If the function succeeds, it returns a value greater than 32.
+	//return ((int)ret > 32);
+	return true;
+#elif __APPLE__
+	return false;
+#else
+	std::string cmd = "xdg-open \"" + url + "\"";
+	return (system(cmd.c_str()) == 0);
+#endif
+}
+
 
 /**
  * Appends a file, logs nothing to avoid recursion.
