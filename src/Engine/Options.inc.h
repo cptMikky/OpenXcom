@@ -20,6 +20,7 @@ OPT MusicFormat preferredMusic;
 OPT SoundFormat preferredSound;
 OPT VideoFormat preferredVideo;
 OPT bool captureMouse;
+OPT TextWrapping wordwrap;
 OPT SDL_Keycode keyOk, keyCancel, keyScreenshot, keyFps, keyQuickLoad, keyQuickSave;
 
 // Geoscape options
