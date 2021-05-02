@@ -129,6 +129,11 @@ struct LoadRuleException : Exception
 	{
 
 	}
+
+	LoadRuleException(const std::string& parent, const std::string& message) : Exception{ "Error for '" + parent + "': " + message}
+	{
+
+	}
 };
 
 /**
@@ -344,6 +349,9 @@ public:
 
 	/// Empty sound.
 	constexpr static int NO_SOUND = -1;
+	/// Special value for defualt string diffrent to empty one.
+	static const std::string STR_NULL;
+
 	static int ITEM_DROP;
 	static int ITEM_THROW;
 	static int ITEM_RELOAD;
@@ -379,6 +387,12 @@ public:
 	static int EXTENDED_TERRAIN_MELEE;
 	static int EXTENDED_UNDERWATER_THROW_FACTOR;
 
+
+	/// Return `true` when given string is empty or pseudo null value.
+	static bool isEmptyRuleName(const std::string& s)
+	{
+		return s.empty() || s == Mod::STR_NULL;
+	}
 	// reset all the statics in all classes to default values
 	static void resetGlobalStatics();
 
@@ -420,6 +434,44 @@ public:
 	/// Gets list of LUT data.
 	const std::vector<std::vector<Uint8> > *getLUTs() const;
 
+	/// Check for error that we can ignore by user request.
+	bool checkForSoftError(bool check, const std::string &parent, const YAML::Node &node, const std::string &error, SeverityLevel level = LOG_WARNING) const
+	{
+		if (check)
+		{
+			auto ex = LoadRuleException(parent, node, error);
+			if (Options::oxceModValidationLevel < level)
+			{
+				Log(level) << "Supressed " << ex.what();
+				return true;
+			}
+			else
+			{
+				throw ex;
+			}
+		}
+		return false;
+	}
+
+	/// Check for error that we can ignore by user request.
+	bool checkForSoftError(bool check, const std::string &parent, const std::string &error, SeverityLevel level = LOG_WARNING) const
+	{
+		if (check)
+		{
+			auto ex = LoadRuleException(parent, error);
+			if (Options::oxceModValidationLevel < level)
+			{
+				Log(level) << "Supressed " << ex.what();
+				return true;
+			}
+			else
+			{
+				throw ex;
+			}
+		}
+		return false;
+	}
+
 	/// Gets the mod offset.
 	int getModOffset() const;
 	/// Get offset and index for sound set or sprite set.
@@ -445,6 +497,10 @@ public:
 	/// Loads a list of ints where order of items does not matter.
 	void loadUnorderedInts(const std::string &parent, std::vector<int>& ints, const YAML::Node &node) const;
 
+	/// Loads a name.
+	void loadName(const std::string &parent, std::string& names, const YAML::Node &node) const;
+	/// Loads a name.
+	void loadNameNull(const std::string &parent, std::string& names, const YAML::Node &node) const;
 	/// Loads a list of names.
 	void loadNames(const std::string &parent, std::vector<std::string>& names, const YAML::Node &node) const;
 	/// Loads a list of names where order of items does not matter.

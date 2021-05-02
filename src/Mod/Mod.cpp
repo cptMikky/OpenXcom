@@ -156,6 +156,9 @@ int Mod::EXTENDED_UNDERWATER_THROW_FACTOR;
 
 constexpr size_t MaxDifficultyLevels = 5;
 
+
+/// Special value for defualt string diffrent to empty one.
+const std::string Mod::STR_NULL = { '\0' };
 /// Predefined name for first loaded mod that have all original data
 const std::string ModNameMaster = "master";
 /// Predefined name for current mod that is loading rulesets.
@@ -737,7 +740,7 @@ Mod::~Mod()
 template <typename T>
 T *Mod::getRule(const std::string &id, const std::string &name, const std::map<std::string, T*> &map, bool error) const
 {
-	if (id.empty())
+	if (isEmptyRuleName(id))
 	{
 		return 0;
 	}
@@ -988,6 +991,8 @@ const std::vector<std::vector<Uint8> > *Mod::getLUTs() const
 	return &_transparencyLUTs;
 }
 
+
+
 /**
  * Returns the current mod-based offset for resources.
  * @return Mod offset.
@@ -1078,6 +1083,8 @@ void showInfo(const std::string &parent, const YAML::Node &node, T... names)
 	}
 }
 
+
+
 /**
  * Tag dispatch struct representing normal load logic.
  */
@@ -1095,18 +1102,70 @@ struct LoadFuncEditable
 };
 
 /**
- * Terminal function loading integer
+ * Tag dispatch struct representing can have null value.
+ */
+struct LoadFuncNullable
+{
+	auto funcTagForNew() -> LoadFuncNullable { return { }; }
+};
+
+
+
+/**
+ * Terminal function loading integer.
  */
 void loadHelper(const std::string &parent, int& v, const YAML::Node &node)
 {
 	v = node.as<int>();
 }
+
 /**
- * Terminal function loading string
+ * Terminal function loading string.
+ * Function can't load empty string.
  */
 void loadHelper(const std::string &parent, std::string& v, const YAML::Node &node)
 {
 	v = node.as<std::string>();
+	if (Mod::isEmptyRuleName(v))
+	{
+		throw LoadRuleException(parent, node, "Invalid value for name");
+	}
+}
+
+/**
+ * Function loading string.
+ * If node do not exists then it do not change value.
+ * Function can't load empty string.
+ */
+void loadHelper(const std::string &parent, std::string& v, const YAML::Node &node, LoadFuncStandard)
+{
+	if (node)
+	{
+		loadHelper(parent, v, node);
+	}
+}
+
+/**
+ * Function loading string with option for pseudo null value.
+ * If node do not exists then it do not change value.
+ */
+void loadHelper(const std::string &parent, std::string& v, const YAML::Node &node, LoadFuncNullable)
+{
+	if (node)
+	{
+		if (node.IsNull())
+		{
+			v = Mod::STR_NULL;
+		}
+		else
+		{
+			v = node.as<std::string>();
+			if (v == Mod::STR_NULL)
+			{
+				throw LoadRuleException(parent, node, "Invalid value for name ");
+			}
+		}
+	}
 }
 
 template<typename T, typename... LoadFuncTag>
@@ -1359,6 +1418,10 @@ void Mod::loadSpriteOffset(const std::string &parent, std::vector<int>& sprites,
 			{
 				sprites.push_back(-1);
 				loadOffsetNode(parent, sprites.back(), *i, maxShared, set, 1);
+				if (checkForSoftError(sprites.back() == -1, parent, *i, "incorrect value in sprite list"))
+				{
+					sprites.pop_back();
+				}
 			}
 		}
 		else
@@ -1404,6 +1467,10 @@ void Mod::loadSoundOffset(const std::string &parent, std::vector<int>& sounds, c
 			{
 				sounds.push_back(Mod::NO_SOUND);
 				loadOffsetNode(parent, sounds.back(), *i, maxShared, set, 1);
+				if (checkForSoftError(sounds.back() == Mod::NO_SOUND, parent, *i, "incorrect value in sound list"))
+				{
+					sounds.pop_back();
+				}
 			}
 		}
 		else
@@ -1512,6 +1579,23 @@ void Mod::loadUnorderedInts(const std::string &parent, std::vector<int>& ints, c
 	loadHelper(parent, ints, node, LoadFuncEditable{});
 }
 
+
+/**
+ * Loads a name.
+ */
+void Mod::loadName(const std::string &parent, std::string& name, const YAML::Node &node) const
+{
+	loadHelper(parent, name, node, LoadFuncStandard{});
+}
+
+/**
+ * Loads a name. Have option of loading null `~` as special string value.
+ */
+void Mod::loadNameNull(const std::string &parent, std::string& name, const YAML::Node &node) const
+{
+	loadHelper(parent, name, node, LoadFuncNullable{});
+}
+
 /**
  * Loads a list of names.
  * Another mod can only override the whole list, no partial edits allowed.
@@ -1563,11 +1647,22 @@ static void afterLoadHelper(const char* name, Mod* mod, std::map<std::string, T*
 	std::ostringstream errorStream;
 	int errorLimit = 30;
 	int errorCount = 0;
+
+	errorStream << "During linking rulesets of " << name << ":\n";
 	for (auto& rule : list)
 	{
 		try
 		{
 			(rule.second->* func)(mod);
+		}
+		catch (LoadRuleException &e)
+		{
+			++errorCount;
+			errorStream << e.what() << "\n";
+			if (errorCount == errorLimit)
+			{
+				break;
+			}
 		}
 		catch (Exception &e)
 		{
@@ -1634,6 +1729,14 @@ void Mod::loadAll()
 	auto mods = FileMap::getRulesets();
 
 	Log(LOG_INFO) << "Loading begins...";
+	if (Options::oxceModValidationLevel < LOG_ERROR)
+	{
+		Log(LOG_ERROR) << "Validation of mod data disabled, game can crash when run";
+	}
+	else if (Options::oxceModValidationLevel < LOG_WARNING)
+	{
+		Log(LOG_WARNING) << "Validation of mod data reduced, game can behave incorrectly";
+	}
 	_scriptGlobal->beginLoad();
 	_modData.clear();
 	_modData.resize(mods.size());
@@ -1756,8 +1859,8 @@ void Mod::loadAll()
 	afterLoadHelper("research", this, _research, &RuleResearch::afterLoad);
 	afterLoadHelper("items", this, _items, &RuleItem::afterLoad);
 	afterLoadHelper("manufacture", this, _manufacture, &RuleManufacture::afterLoad);
-	afterLoadHelper("units", this, _units, &Unit::afterLoad);
 	afterLoadHelper("armors", this, _armors, &Armor::afterLoad);
+	afterLoadHelper("units", this, _units, &Unit::afterLoad);
 	afterLoadHelper("soldiers", this, _soldiers, &RuleSoldier::afterLoad);
 	afterLoadHelper("facilities", this, _facilities, &RuleBaseFacility::afterLoad);
 	afterLoadHelper("enviroEffects", this, _enviroEffects, &RuleEnviroEffects::afterLoad);
@@ -2855,6 +2958,12 @@ T *Mod::loadRule(const YAML::Node &node, std::map<std::string, T*> *map, std::ve
 	if (node[key])
 	{
 		std::string type = node[key].as<std::string>();
+
+		if (isEmptyRuleName(type))
+		{
+			throw Exception("Invalid value for '" + key + "' at line " + std::to_string(node[key].Mark().line));
+		}
+
 		typename std::map<std::string, T*>::const_iterator i = map->find(type);
 		if (i != map->end())
 		{
@@ -2876,6 +2985,12 @@ T *Mod::loadRule(const YAML::Node &node, std::map<std::string, T*> *map, std::ve
 	else if (node["delete"])
 	{
 		std::string type = node["delete"].as<std::string>();
+
+		if (isEmptyRuleName(type))
+		{
+			throw Exception("Invalid value for 'delete' at line " +  std::to_string(node["delete"].Mark().line));
+		}
+
 		typename std::map<std::string, T*>::iterator i = map->find(type);
 		if (i != map->end())
 		{
@@ -4079,7 +4194,7 @@ Soldier *Mod::genSoldier(SavedGame *save, std::string type) const
 {
 	Soldier *soldier = 0;
 	int newId = save->getId("STR_SOLDIER");
-	if (type.empty())
+	if (isEmptyRuleName(type))
 	{
 		type = _soldiersIndex.front();
 	}
@@ -4300,7 +4415,7 @@ RuleResearch *Mod::getFinalResearch() const
 
 RuleBaseFacility *Mod::getDestroyedFacility() const
 {
-	if (_destroyedFacility.empty())
+	if (isEmptyRuleName(_destroyedFacility))
 		return 0;
 
 	auto temp = getBaseFacility(_destroyedFacility, true);
