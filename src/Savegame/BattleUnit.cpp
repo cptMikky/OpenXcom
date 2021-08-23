@@ -2342,6 +2342,8 @@ void BattleUnit::prepareTimeUnits(int tu)
 		}
 		// Each fatal wound to the left or right leg reduces the soldier's TUs by 10%.
 		_tu -= (_tu * ((_fatalWounds[BODYPART_LEFTLEG]+_fatalWounds[BODYPART_RIGHTLEG]) * 10))/100;
+
+		setValueMax(_tu, 0, 0, getBaseStats()->tu);
 	}
 }
 
@@ -2928,7 +2930,7 @@ void BattleUnit::setVisible(bool flag)
  */
 bool BattleUnit::getVisible() const
 {
-	if (getFaction() == FACTION_PLAYER)
+	if (getFaction() == FACTION_PLAYER || _armor->isAlwaysVisible())
 	{
 		return true;
 	}
@@ -4975,6 +4977,14 @@ bool BattleUnit::getCapturable() const
 	return _capturable;
 }
 
+void BattleUnit::freePatrolTarget()
+{
+	if (_currentAIState)
+	{
+		_currentAIState->freePatrolTarget();
+	}
+}
+
 /**
  * Marks this unit as summoned by an item or not.
  * @param summonedPlayerUnit summoned?
@@ -5175,6 +5185,7 @@ void getReactionScoreScript(const BattleUnit *bu, int &ret)
 	if (bu)
 	{
 		ret = (int)bu->getReactionScore();
+		return;
 	}
 	ret = 0;
 }
@@ -5353,6 +5364,15 @@ void isAimingScript(const BattleUnit *bu, int &ret)
 	ret = 0;
 }
 
+void makeVisibleScript(BattleUnit *bu)
+{
+	if (bu)
+	{
+		bu->setVisible(true);
+		return;
+	}
+}
+
 struct burnShadeScript
 {
 	static RetEnum func(int &curr, int burn, int shade)
@@ -5423,6 +5443,16 @@ void addBaseStatRangeScript(BattleUnit *bu, int val)
 		setBaseStatRangeScript<StatCurr, Min, Max>(bu, val + (bu->*StatCurr));
 	}
 }
+
+void setFireScript(BattleUnit *bu, int val)
+{
+	if (bu)
+	{
+		val = Clamp(val, 0, 1000);
+		bu->setFire(val);
+	}
+}
+
 
 void getVisibleUnitsCountScript(BattleUnit *bu, int &ret)
 {
@@ -5706,6 +5736,9 @@ void BattleUnit::ScriptRegister(ScriptParserBase* parser)
 	bu.add<&BattleUnit::getWalkingPhase>("getWalkingPhase");
 	bu.add<&BattleUnit::disableIndicators>("disableIndicators");
 
+	bu.add<&BattleUnit::getVisible>("isVisible");
+	bu.add<&makeVisibleScript>("makeVisible");
+
 
 	bu.add<&setSpawnUnitScript>("setSpawnUnit", "set type of zombie will be spawn from curret unit, it will reset every thing to default (hostile & instant)");
 	bu.add<&getSpawnUnitScript>("getSpawnUnit", "get type of zombie will be spawn from curret unit");
@@ -5744,6 +5777,10 @@ void BattleUnit::ScriptRegister(ScriptParserBase* parser)
 	bu.addFake<100>("getMoraleMax");
 	bu.add<&setBaseStatRangeScript<&BattleUnit::_morale, 0, 100>>("setMorale");
 	bu.add<&addBaseStatRangeScript<&BattleUnit::_morale, 0, 100>>("addMorale");
+
+
+	bu.add<&BattleUnit::getFire>("getFire");
+	bu.add<&setFireScript>("setFire");
 
 
 	bu.add<&setArmorValueScript>("setArmor", "first arg is side, second one is new value of armor");
