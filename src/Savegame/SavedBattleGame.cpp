@@ -189,13 +189,13 @@ void SavedBattleGame::load(const YAML::Node &node, Mod *mod, SavedGame* savedGam
 		size_t totalTiles = node["totalTiles"].as<size_t>();
 
 		memset(&serKey, 0, sizeof(Tile::SerializationKey));
-		serKey.index = node["tileIndexSize"].as<Uint8>(serKey.index);
+		serKey.index = node["tileIndexSize"].as<int>(serKey.index);
 		serKey.totalBytes = node["tileTotalBytesPer"].as<Uint32>(serKey.totalBytes);
-		serKey._fire = node["tileFireSize"].as<Uint8>(serKey._fire);
-		serKey._smoke = node["tileSmokeSize"].as<Uint8>(serKey._smoke);
-		serKey._mapDataID = node["tileIDSize"].as<Uint8>(serKey._mapDataID);
-		serKey._mapDataSetID = node["tileSetIDSize"].as<Uint8>(serKey._mapDataSetID);
-		serKey.boolFields = node["tileBoolFieldsSize"].as<Uint8>(1); // boolean flags used to be stored in an unmentioned byte (Uint8) :|
+		serKey._fire = node["tileFireSize"].as<int>(serKey._fire);
+		serKey._smoke = node["tileSmokeSize"].as<int>(serKey._smoke);
+		serKey._mapDataID = node["tileIDSize"].as<int>(serKey._mapDataID);
+		serKey._mapDataSetID = node["tileSetIDSize"].as<int>(serKey._mapDataSetID);
+		serKey.boolFields = node["tileBoolFieldsSize"].as<int>(1); // boolean flags used to be stored in an unmentioned byte (Uint8) :|
 
 		// load binary tile data!
 		YAML::Binary binTiles = node["binTiles"].as<YAML::Binary>();
@@ -564,13 +564,13 @@ YAML::Node SavedBattleGame::save() const
 	}
 #else
 	// first, write out the field sizes we're going to use to write the tile data
-	node["tileIndexSize"] = Tile::serializationKey.index;
-	node["tileTotalBytesPer"] = Tile::serializationKey.totalBytes;
-	node["tileFireSize"] = Tile::serializationKey._fire;
-	node["tileSmokeSize"] = Tile::serializationKey._smoke;
-	node["tileIDSize"] = Tile::serializationKey._mapDataID;
-	node["tileSetIDSize"] = Tile::serializationKey._mapDataSetID;
-	node["tileBoolFieldsSize"] = Tile::serializationKey.boolFields;
+	node["tileIndexSize"] = (int) Tile::serializationKey.index;
+	node["tileTotalBytesPer"] = (int) Tile::serializationKey.totalBytes;
+	node["tileFireSize"] = (int) Tile::serializationKey._fire;
+	node["tileSmokeSize"] = (int) Tile::serializationKey._smoke;
+	node["tileIDSize"] = (int) Tile::serializationKey._mapDataID;
+	node["tileSetIDSize"] = (int) Tile::serializationKey._mapDataSetID;
+	node["tileBoolFieldsSize"] = (int) Tile::serializationKey.boolFields;
 
 	size_t tileDataSize = Tile::serializationKey.totalBytes * _mapsize_z * _mapsize_y * _mapsize_x;
 	Uint8* tileData = (Uint8*) calloc(tileDataSize, 1);
